@@ -25,6 +25,8 @@ Vue.prototype.$jwt = jwt;
 /*echarts绑定到vue原型*/
 Vue.prototype.$echarts = echarts;
 
+
+
 // 路由配置
 const RouterConfig = {
 /*    mode: 'history',*/
