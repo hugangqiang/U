@@ -8,68 +8,20 @@
                     </div>
                 </router-link>
                 <div class="u-left-menu">
-                    <Menu theme="dark" :open-names="['1']" accordion width="auto">
-                        <div class="menuToggle" @click="toggleMenu">
-                            <Icon type="navicon"></Icon>
-                        </div>
-                        <Submenu name="1">
-                            <template slot="title">
-                                <span class="layout-text"><Icon type="ios-paper"></Icon>
-                                内容管理</span>
-                            </template>
-                            <Menu-item name="1-1">
-                                <Icon type="clipboard"></Icon>
-                                <span class="layout-text">文章管理</span>
-                            </Menu-item>
-                            <Menu-item name="1-2">
-                                <Icon type="compose"></Icon>
-                                <span class="layout-text">评论管理</span>
-                            </Menu-item>
-                            <Menu-item name="1-3">
-                                <Icon type="ios-lightbulb"></Icon>
-                                <span class="layout-text">举报管理</span>
-                            </Menu-item>
-                        </Submenu>
-                        <Submenu name="2">
-                            <template slot="title">
-                                <span class="layout-text"><Icon type="android-person"></Icon>
-                                用户管理</span>
-                            </template>
-                            <Menu-item name="2-1">
-                                <Icon type="person-add"></Icon>
-                                <span class="layout-text">新增用户</span>
-                            </Menu-item>
-                            <Menu-item name="2-2">
-                                <Icon type="person-stalker"></Icon>
-                                <span class="layout-text">活跃用户</span>
-                            </Menu-item>
-                        </Submenu>
-                        <Submenu name="3">
-                            <template slot="title">
-                                <span class="layout-text"><Icon type="stats-bars"></Icon>
-                                统计分析</span>                            
-                            </template>
-                            <Menu-item name="3-1">
-                                <Icon type="fork-repo"></Icon>
-                                <span class="layout-text">新增和启动</span>
-                            </Menu-item>
-                            <Menu-item name="3-2">
-                                <Icon type="stats-bars"></Icon>
-                                <span class="layout-text">活跃分析</span>
-                            </Menu-item>
-                            <Menu-item name="3-3">
-                                <Icon type="ios-pulse"></Icon>
-                                <span class="layout-text">时段分析</span>
-                            </Menu-item>
-                            <Menu-item name="3-4">
-                                <Icon type="coffee"></Icon>
-                                <span class="layout-text">用户留存</span>
-                            </Menu-item>
-                            <Menu-item name="3-5">
-                                <Icon type="flash"></Icon>
-                                <span class="layout-text">流失用户</span>
-                            </Menu-item>
-                        </Submenu>
+                    <Menu active-name="1" theme="dark" width="auto">
+                        <div class="layout-logo-left"></div>
+                        <MenuItem name="1">
+                            <Icon type="ios-navigate"></Icon>
+                            <span class="layout-text">支出管理</span>
+                        </MenuItem>
+                        <MenuItem name="2">
+                            <Icon type="ios-pulse-strong"></Icon>
+                            <span class="layout-text">报表中心</span>
+                        </MenuItem>
+                        <MenuItem name="3">
+                            <Icon type="ios-settings-strong"></Icon>
+                            <span class="layout-text">系统中心</span>
+                        </MenuItem>
                     </Menu>
                 </div>
             </div>
@@ -146,13 +98,13 @@
             width: 100%;
             .u-top-menu{
                 height: 60px;
-                background: #fff;
+                background: #424f63;
                 display: flex;
                 flex-flow: row nowrap;
                 justify-content: flex-end;
                 .item{
                     line-height: 60px;
-                    color: #333333;
+                    color: #fff;
                     font-size: 16px;
                     padding: 0 20px;
                     cursor: pointer;

@@ -62,8 +62,6 @@ export default{
 <style lang="less">
 	.wrap{
 		background: #f5f5f5;
-        position: relative;
-        min-height: 1000px;
     }
     .layout{
         width: 1200px;
