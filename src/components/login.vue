@@ -42,8 +42,8 @@
                     </TabPane>
                     <TabPane label="注册" name="name2">
                         <Form ref="formInlineReg" :model="formInlineReg" :rules="ruleInlineReg">
-                            <Form-item prop="userName">
-                                <Input type="text" v-model="formInlineReg.userName" placeholder="请输入手机号或用户名">
+                            <Form-item prop="phone">
+                                <Input type="text" v-model="formInlineReg.phone" placeholder="请输入手机号">
                                     <Icon type="ios-person-outline" slot="prepend"></Icon>
                                 </Input>
                             </Form-item>
@@ -51,7 +51,7 @@
                                 <Input type="text" v-model="formInlineReg.verifyCode" placeholder="请输入手机验证码">
                                     <Icon type="grid" slot="prepend"></Icon>
                                 </Input>
-                                <div class="verifyCode-btn">获取验证码</div>
+                                <div class="verifyCode-btn" @click="getVerifyCode">获取验证码</div>
                             </Form-item>
                             <Form-item prop="password">
                                 <Input type="password" v-model="formInlineReg.password" placeholder="设置密码，密码长度6-20字符">
@@ -140,6 +140,23 @@
                 </Row>
             </div>
         </div>
+        <div class="u-height u-content-more">
+            <div class="u-content-text">
+                <h3>OPEN</h3>
+                <div class="text">
+                    <span>SOON</span>
+                    <span>更多功能  敬请期待</span>
+                </div>
+            </div>
+        </div>
+        <div class="u-footer">
+            <div class="logo">
+                <img src="./images/logo.png" alt="">
+            </div>
+            <p>联系我们：17602192829  |  客服QQ：1031514657</p>
+            <p>沪ICP备17015887号</p>
+            <p>Copyright ©  U行政 www.uxingzheng.com  All rights reserved</p>
+        </div>
     </div>
 </template>
 <script>
@@ -157,22 +174,25 @@
                     ],
                     password: [
                         { required: true, message: '请填写密码', trigger: 'blur' },
-                        { type: 'string', min: 8, message: '密码长度不能小于8位', trigger: 'blur' }
+                        { type: 'string', min: 6, message: '密码长度不能小于8位', trigger: 'blur' }
                     ]
                 },
                 formInlineReg: {
-                    userName: '',
+                    phone: '',
                     verifyCode: '',
                     password: '',
                     check: false
                 },
                 ruleInlineReg: {
-                    userName: [
-                        { required: true, message: '请填写用户名', trigger: 'blur' }
+                    phone: [
+                        { required: true, message: '请输入手机号', trigger: 'blur' }
+                    ],
+                    verifyCode: [
+                        { required: true, message: '请输入验证码', trigger: 'blur' }
                     ],
                     password: [
                         { required: true, message: '请填写密码', trigger: 'blur' },
-                        { type: 'string', min: 8, message: '密码长度不能小于8位', trigger: 'blur' }
+                        { type: 'string', min: 6, message: '密码长度不能小于8位', trigger: 'blur' }
                     ]
                 }
             }
@@ -248,15 +268,17 @@
                     if (valid) {
                         let _this = this;
                         _this.$ajax({
-                            url: "/login",
+                            url: "/register",
                             method: "POST",
                             params: {
-                                username: this.$refs.formInlineLogin.$options.propsData.model.userName,
-                                password: this.$refs.formInlineLogin.$options.propsData.model.password
+                                phone: this.$refs.formInlineReg.$options.propsData.model.phone,
+                                code: this.$refs.formInlineReg.$options.propsData.model.verifyCode,
+                                password: this.$refs.formInlineReg.$options.propsData.model.password
                             }
                         })
                         .then((res) => {
-                            let code = res.data.meta.code;
+                            console.log(res.data)
+                            /* let code = res.data.meta.code;
                             if( code === 451 ){
                                 _this.$Message.error("参数验证错误!");
                             }else if( code === 452 ){
@@ -266,7 +288,6 @@
                             }else if( code === 454 ){
                                 _this.$Message.error("密码错误!");
                             }else if( code === 200 ){
-                                /*加密得到的信息token*/
                                 let token = _this.$jwt.sign(res.data.data, 'sofa', {
                                     expiresIn: "1days"
                                 })
@@ -281,15 +302,23 @@
                                 }else{
                                     _this.$router.push({path:'/'});
                                 }
-                            }
+                            } */
                         })
-                        .catch((err) => {
-                            console.log(err)
-                            _this.$Message.error("登录异常，请稍后再尝试！");
-                        });
                     } else {
                         this.$Message.error('表单验证失败!');
                     }
+                })
+            },
+            getVerifyCode(){
+                this.$ajax({
+                    url: "/code/register",
+                    method: "GET",
+                    params: {
+                        phone: this.formInlineReg.phone
+                    }
+                })
+                .then((res) => {
+                    console.log(res)
                 })
             }
         }
@@ -375,6 +404,7 @@
             right: 10%;
             top: 50%;
             border-radius: 8px;
+            margin-top: 30px;
             transform: translateY(-50%);
             .ivu-tabs-bar{
                 border-bottom: none;
@@ -477,7 +507,7 @@
     .u-content-box{
         background: #fff;
         .layout{
-            transform: translateY(50%);
+            transform: translateY(25%);
         }
         .u-content-text{
             h3{
@@ -495,6 +525,51 @@
             img{
                 max-width: 100%;
             }
+        }
+    }
+    .u-content-more{
+        background: url("./images/content-img04.png");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        position: relative;
+        .u-content-text{
+            text-align: center;
+            width: 100%;
+            height: 150px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            h3{
+                display: inline-block;
+                font-size: 85px;
+                color: #fff;
+            }
+            .text{
+                display: inline-block;
+                span{
+                    display: block;
+                    font-size: 30px;
+                    line-height: 37px;
+                    color: #fff;
+                    text-align: left;
+                }
+            }
+        }
+    }
+    .u-footer{
+        width: 100%;
+        height: 450px;
+        background: #202023;
+        text-align: center;
+        padding: 70px 0 50px;
+        .logo{
+            margin-bottom: 60px;
+        }
+        p{
+            font-size: 20px;
+            line-height: 45px;
+            color: #fff;
         }
     }
 </style>

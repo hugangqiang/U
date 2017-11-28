@@ -21,6 +21,13 @@ const routers = [
                     title: '首页'
                 },
                 component: resolve => require(['../components/home/index.vue'], resolve)
+            },
+            {
+                path: '/expenditure',
+                meta: {
+                    title: '支出管理'
+                },
+                component: resolve => require(['../components/expenditure/index.vue'], resolve)
             }
         ]
     }

@@ -64,28 +64,23 @@ export default{
 		background: #f5f5f5;
     }
     .layout{
-        width: 1200px;
+        width: 1170px;
         margin-left: auto;
         margin-right: auto;
     }
     @media (min-width: 1851px ) {
         .layout{
-            width: 1700px;
+            width: 1600px;
         }
     }
     @media (min-width: 1651px ) and (max-width: 1850px ) {
         .layout{
-            width: 1600px;
+            width: 1500px;
         }
     }
     @media (min-width: 1551px ) and (max-width: 1650px ) {
         .layout{
-            width: 1500px;
-        }
-    }
-    @media (min-width: 1350px ) and (max-width: 1550px ) {
-        .layout{
-            width: 1300px;
+            width: 1400px;
         }
     }
 </style>

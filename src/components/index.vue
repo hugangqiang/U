@@ -10,10 +10,12 @@
                 <div class="u-left-menu">
                     <Menu active-name="1" theme="dark" width="auto">
                         <div class="layout-logo-left"></div>
-                        <MenuItem name="1">
-                            <Icon type="ios-navigate"></Icon>
-                            <span class="layout-text">支出管理</span>
-                        </MenuItem>
+                        <router-link to="/expenditure">
+                            <MenuItem name="1">
+                                <Icon type="ios-navigate"></Icon>
+                                <span class="layout-text">支出管理</span>
+                            </MenuItem>
+                        </router-link>
                         <MenuItem name="2">
                             <Icon type="ios-pulse-strong"></Icon>
                             <span class="layout-text">报表中心</span>
