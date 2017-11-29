@@ -20,8 +20,8 @@
                 <Tabs value="name1">
                     <TabPane label="登录" name="name1">
                         <Form ref="formInlineLogin" :model="formInlineLogin" :rules="ruleInlineLogin" >
-                            <Form-item prop="userName">
-                                <Input type="text" v-model="formInlineLogin.userName" placeholder="请输入手机号或用户名">
+                            <Form-item prop="phone">
+                                <Input type="text" v-model="formInlineLogin.phone" placeholder="请输入手机号或用户名">
                                     <Icon type="ios-person-outline" slot="prepend"></Icon>
                                 </Input>
                             </Form-item>
@@ -54,7 +54,7 @@
                                 <div class="verifyCode-btn" @click="getVerifyCode">获取验证码</div>
                             </Form-item>
                             <Form-item prop="password">
-                                <Input type="password" v-model="formInlineReg.password" placeholder="设置密码，密码长度6-20字符">
+                                <Input type="password" v-model="formInlineReg.password" placeholder="设置密码，密码长度8-20字符">
                                     <Icon type="ios-locked-outline" slot="prepend"></Icon>
                                 </Input>
                             </Form-item>
@@ -63,7 +63,7 @@
                                 <span>《服务协议》</span>
                             </Form-item>
                             <Form-item>
-                                <Button type="primary" class="btn-login" @click="RegSubmit('formInlineReg')">登录</Button>
+                                <Button type="primary" :disabled="!formInlineReg.check" class="btn-login" @click="RegSubmit('formInlineReg')">注册</Button>
                             </Form-item>
                         </Form>
                     </TabPane>
@@ -158,41 +158,52 @@
             <p>Copyright ©  U行政 www.uxingzheng.com  All rights reserved</p>
         </div>
     </div>
-</template>
+</template>d
 <script>
     export default {
         data () {
+            const validatePhone = (rule, value, callback) => {
+                let reg = /0?(13|14|15|16|17|18|19)[0-9]{9}/;
+                if (value === '') {
+                    callback(new Error('请输入手机号！'));
+                } else if( !reg.test(value) ) {
+                    callback(new Error('请输入正确的手机号！'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 formInlineLogin: {
-                    userName: '',
-                    password: '',
-                    rememPasssword: []
-                },
-                ruleInlineLogin: {
-                    userName: [
-                        { required: true, message: '请填写用户名', trigger: 'blur' }
-                    ],
-                    password: [
-                        { required: true, message: '请填写密码', trigger: 'blur' },
-                        { type: 'string', min: 6, message: '密码长度不能小于8位', trigger: 'blur' }
-                    ]
+                    phone: '',
+                    password: ''
                 },
                 formInlineReg: {
                     phone: '',
                     verifyCode: '',
+                    onCode: true,
                     password: '',
                     check: false
                 },
-                ruleInlineReg: {
+                ruleInlineLogin: {
                     phone: [
-                        { required: true, message: '请输入手机号', trigger: 'blur' }
-                    ],
-                    verifyCode: [
-                        { required: true, message: '请输入验证码', trigger: 'blur' }
+                        { required: true, validator: validatePhone, trigger: 'blur' }
                     ],
                     password: [
                         { required: true, message: '请填写密码', trigger: 'blur' },
-                        { type: 'string', min: 6, message: '密码长度不能小于8位', trigger: 'blur' }
+                        { type: 'string', min: 8, max: 20, message: '密码长度不能小于8位', trigger: 'blur' }
+                    ]
+                },
+                ruleInlineReg: {
+                    phone: [
+                        { required: true, validator: validatePhone, trigger: 'blur' }
+                    ],
+                    verifyCode: [
+                        { required: true, message: '请输入验证码', trigger: 'blur' },
+                        { type: 'string', min: 6, max: 6, message: '请输入6位验证码！', trigger: 'blur' }
+                    ],
+                    password: [
+                        { required: true, message: '请填写密码', trigger: 'blur' },
+                        { type: 'string', min: 8, max: 20, message: '密码长度不能小于8位', trigger: 'blur' }
                     ]
                 }
             }
@@ -222,11 +233,12 @@
                             url: "/login",
                             method: "POST",
                             params: {
-                                username: this.$refs.formInlineLogin.$options.propsData.model.userName,
+                                phone: this.$refs.formInlineLogin.$options.propsData.model.phone,
                                 password: this.$refs.formInlineLogin.$options.propsData.model.password
                             }
                         })
                         .then((res) => {
+                            console.log(res.data)
                             let code = res.data.meta.code;
                             if( code === 451 ){
                                 _this.$Message.error("参数验证错误!");
@@ -238,26 +250,14 @@
                                 _this.$Message.error("密码错误!");
                             }else if( code === 200 ){
                                 /*加密得到的信息token*/
-                                let token = _this.$jwt.sign(res.data.data, 'sofa', {
+                                let token = _this.$jwt.sign(res.data.data, 'u', {
                                     expiresIn: "1days"
                                 })
-                                let role = _this.$jwt.sign({role:"*$%#^"}, 'sofa', {
-                                    expiresIn: "1days"
-                                })
-                                _this.$store.commit('SAVE_USER', res.data.data);
-                                sessionStorage.setItem('token', token);
-                                if( res.data.data.role === '' ){
-                                    sessionStorage.setItem('role',role);
-                                    _this.$router.push({path:'/role'});    
-                                }else{
-                                    _this.$router.push({path:'/'});
-                                }
+                                _this.$store.commit('SAVE_USER', response.data.data);
+                                _this.$setCookie("token",token);
+                                _this.$router.push({path:'/'});
                             }
                         })
-                        .catch((err) => {
-                            console.log(err)
-                            _this.$Message.error("登录异常，请稍后再尝试！");
-                        });
                     } else {
                         this.$Message.error('表单验证失败!');
                     }
@@ -309,17 +309,41 @@
                     }
                 })
             },
-            getVerifyCode(){
-                this.$ajax({
-                    url: "/code/register",
-                    method: "GET",
-                    params: {
-                        phone: this.formInlineReg.phone
+            getVerifyCode(e){
+                if( this.formInlineReg.onCode ){
+                    let reg = /0?(13|14|15|16|17|18|19)[0-9]{9}/;
+                    this.formInlineReg.onCode = false;
+                    let s = 59;
+                    if( this.formInlineReg.phone === '' ){
+                        this.$Message.error('请输入手机号!');
+                        return;
+                    } else if( !reg.test(this.formInlineReg.phone) ){
+                        this.$Message.error('请输入正确的手机号!');
+                        return;
                     }
-                })
-                .then((res) => {
-                    console.log(res)
-                })
+                    let _this = this;
+                    this.$ajax({
+                        url: "/code/register",
+                        method: "GET",
+                        params: {
+                            phone: this.formInlineReg.phone
+                        }
+                    }).then((res) => {
+                        if(res.data.meta.code === 452 ){
+                            this.$Message.error('手机号已注册!');
+                        } else if( res.data.meta.code === 200 ){
+                            let time = setInterval(function(){
+                                e.target.innerHTML = s + "s后重发";
+                                s--;
+                                if( s === 0 ){
+                                    clearInterval(time);
+                                    e.target.innerHTML = "获取验证";
+                                    _this.formInlineReg.onCode = true;
+                                }
+                            },1000)
+                        }
+                    });
+                }
             }
         }
     }
@@ -331,6 +355,7 @@
         background: url("./images/banner01.png");
         background-size: cover;
         background-repeat: no-repeat;
+        
         .login-top{
             height: 90px;
             background: #fff;

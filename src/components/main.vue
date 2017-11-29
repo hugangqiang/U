@@ -29,6 +29,10 @@ export default{
                 //     }
                 //     config.params.access_token = this.$store.state.userinfo.accessToken;
                 // }
+                /*if( typeof config.params === "undefined" ){
+                    config.params = {}
+                }
+                config.params.access_token = 'ace6a48c-11b0-4cfb-9ac0-c1cc39e6caeb'; */
                 return config;
             },
             err => {
@@ -46,14 +50,10 @@ export default{
                     switch (error.response.status) {
                         case 401:
                             // 返回 401 清除token信息并跳转到登录页面
-                            store.commit(types.LOGOUT);
-                            router.replace({
-                                path: 'login',
-                                query: {redirect: router.currentRoute.fullPath}
-                            })
+                            console.log("token已经过期");
                     }
                 }
-                return Promise.reject(error.response.data)   // 返回接口返回的错误信息
+                return Promise.reject(error)   // 返回接口返回的错误信息
             }
         );
     }

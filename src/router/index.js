@@ -27,7 +27,27 @@ const routers = [
                 meta: {
                     title: '支出管理'
                 },
-                component: resolve => require(['../components/expenditure/index.vue'], resolve)
+                //默认跳转
+                redirect: '/expenditure/list',
+                component: resolve => require(['../components/expenditure/index.vue'], resolve),
+                //以下部分为主页的子模块
+                children: [
+                    {
+                        path: 'list',
+                        meta: {
+                            title: '支出列表'
+                        },
+                        component: resolve => require(['../components/expenditure/list.vue'], resolve)
+                    },
+                    {
+                        path: 'add',
+                        meta: {
+                            title: '新增支出'
+                        },
+                        component: resolve => require(['../components/expenditure/add.vue'], resolve)
+                    }
+                ]
+                
             }
         ]
     }

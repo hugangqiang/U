@@ -25,6 +25,36 @@ Vue.prototype.$jwt = jwt;
 /*echarts绑定到vue原型*/
 Vue.prototype.$echarts = echarts;
 
+/*设置获取cookie绑定到vue原型*/
+function getCookie(name){
+    let arr,reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+    if (arr = document.cookie.match(reg)){
+        return unescape(arr[2]);
+    }else{
+        return null;
+    }
+}
+Vue.prototype.$setCookie = function(name,value){
+    let Days = 30;
+    document.cookie = name + "="+ escape (value) + ";" ;
+}
+Vue.prototype.$getCookie = function(name){
+    let arr,reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+    if (arr = document.cookie.match(reg)){
+        return unescape(arr[2]);
+    }else{
+        return null;
+    }
+}
+Vue.prototype.$delCookie = function(name){
+    let exp = new Date();
+    exp.setTime(exp.getTime() - 1);
+    let cval = getCookie(name);
+    if (cval != null) document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+}
+
+
+
 // 路由配置
 const RouterConfig = {
 /*    mode: 'history',*/
@@ -37,37 +67,22 @@ router.beforeEach((to, from, next) => {
 
     /*设置标题*/
     Util.title(to.meta.title);
-
     /*
     * 路由拦截
     * 需要登录,是否需要登录权限
     */
-    // if(!to.matched.some(res => res.meta.requireAuth)){
-    //     /*判断是否登录*/
-    //     if(sessionStorage.getItem('token')){
-    //         /*判断是否进入选择角色页面*/
-    //         if(!to.matched.some(res => res.meta.roleAuth)){
-    //             if(sessionStorage.getItem('role')){
-    //                 /*没有选择角色跳到选择角色页面*/
-    //                 next({
-    //                     path: '/role',
-    //                     query: {redirect: to.fullPath}
-    //                 })
-    //             }else{
-    //                 next()    
-    //             }
-    //         }else{
-    //             next()
-    //         }
-            
-    //     }else{
-    //         /*没有登录跳到登录页面*/
-    //         next({
-    //             path: '/login',
-    //             query: {redirect: to.fullPath}
-    //         })
-    //     }
-    // }
+    if(!to.matched.some(res => res.meta.requireAuth)){
+        /*判断是否登录*/
+        if(getCookie("token")){
+            next();
+        }else{
+            /*没有登录跳到登录页面*/
+            next({
+                path: '/login',
+                query: {redirect: to.fullPath}
+            })
+        }
+    }
     next();
 });
 

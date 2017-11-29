@@ -19,11 +19,7 @@ module.exports = merge(webpackBaseConfig, {
         inline: true,
         stats: { colors: true },
         proxy: {
-            // ':8080': {
-            //   target: 'http://192.168.1.21:8080',
-            //   pathRewrite: {'^/api-daps' : '/api-daps'},
-            //   changeOrigin: true
-            // }
+            
         }
     },
     output: {

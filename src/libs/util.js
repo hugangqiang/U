@@ -17,7 +17,7 @@ if( env === 'development' ){
 
 }
 
-
+console.log("api:"+config.ajaxUrl)
 util.ajax = axios.create({
     baseURL: config.ajaxUrl,
     timeout: 60000

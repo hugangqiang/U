@@ -8,22 +8,19 @@
                     </div>
                 </router-link>
                 <div class="u-left-menu">
-                    <Menu active-name="1" theme="dark" width="auto">
-                        <div class="layout-logo-left"></div>
-                        <router-link to="/expenditure">
-                            <MenuItem name="1">
-                                <Icon type="ios-navigate"></Icon>
-                                <span class="layout-text">支出管理</span>
-                            </MenuItem>
-                        </router-link>
-                        <MenuItem name="2">
-                            <Icon type="ios-pulse-strong"></Icon>
-                            <span class="layout-text">报表中心</span>
-                        </MenuItem>
-                        <MenuItem name="3">
-                            <Icon type="ios-settings-strong"></Icon>
-                            <span class="layout-text">系统中心</span>
-                        </MenuItem>
+                    <Menu active-name="1-1" theme="dark" width="auto" :open-names="['1']">
+                        <Submenu v-for="(items,indexs) in menus" :key="items.id" :name="indexs+1">
+                            <template slot="title">
+                                <Icon :type="items.icon"></Icon>
+                                <span class="text">{{items.title}}</span>
+                            </template>
+                            <router-link v-for="(item, index) in items.children" :key="item.id" :to="item.href">
+                                <MenuItem :name="indexs+1 + '-' + index+1">
+                                    <Icon :type="item.icon"></Icon>
+                                    <span class="text">{{ item.subtitle }}</span>
+                                </MenuItem>
+                            </router-link>
+                        </Submenu>
                     </Menu>
                 </div>
             </div>
@@ -57,7 +54,66 @@
     export default {
         data () {
             return {
-
+                menus: [
+                    {
+                        title: "支出管理",
+                        icon: 'ios-navigate',
+                        children: [
+                            {
+                                subtitle: '支出列表',
+                                icon: 'ios-compose',
+                                href: '/expenditure/list'
+                            },
+                            {
+                                subtitle: '新增支出',
+                                icon: 'ios-compose',
+                                href: '/expenditure/add'
+                            }
+                        ]
+                    },
+                    {
+                        title: "报表中心",
+                        icon: 'ios-pulse-strong',
+                        children: [
+                            {
+                                subtitle: '支出列表',
+                                icon: 'ios-compose',
+                                href: '/expenditure/list'
+                            },
+                            {
+                                subtitle: '新增支出',
+                                icon: 'ios-compose',
+                                href: '/expenditure/add'
+                            }
+                        ]
+                    },
+                    {
+                        title: "系统设置",
+                        icon: 'ios-settings-strong',
+                        children: [
+                            {
+                                subtitle: '用户设置',
+                                icon: 'ios-compose',
+                                href: '/expenditure/list'
+                            },
+                            {
+                                subtitle: '供应商管理',
+                                icon: 'ios-compose',
+                                href: '/expenditure/add'
+                            },
+                            {
+                                subtitle: '部门人员管理',
+                                icon: 'ios-compose',
+                                href: '/expenditure/add'
+                            },
+                            {
+                                subtitle: '类目设置',
+                                icon: 'ios-compose',
+                                href: '/expenditure/add'
+                            }
+                        ]
+                    }
+                ]
             }
         },
         created(){
