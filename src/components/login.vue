@@ -5,8 +5,8 @@
                 <div class="layout">
                     <div class="logo"></div>
                     <div class="btns">
-                        <span class="reg-btn">注册</span>
-                        <span class="login-btn">登录</span>
+                        <span class="reg-btn" @click="loginName='name2'">注册</span>
+                        <span class="login-btn" @click="loginName='name1'">登录</span>
                     </div>
                 </div>
             </div>
@@ -17,7 +17,7 @@
                 <button class="btn">立即体验</button>
             </div>
             <div class="loginBox">
-                <Tabs value="name1">
+                <Tabs v-model="loginName">
                     <TabPane label="登录" name="name1">
                         <Form ref="formInlineLogin" :model="formInlineLogin" :rules="ruleInlineLogin" >
                             <Form-item prop="phone">
@@ -68,7 +68,6 @@
                         </Form>
                     </TabPane>
                 </Tabs>
-                
             </div>
         </div>
         <div class="u-height u-content-box">
@@ -158,12 +157,12 @@
             <p>Copyright ©  U行政 www.uxingzheng.com  All rights reserved</p>
         </div>
     </div>
-</template>d
+</template>
 <script>
     export default {
         data () {
             const validatePhone = (rule, value, callback) => {
-                let reg = /0?(13|14|15|16|17|18|19)[0-9]{9}/;
+                let reg = /^1[3|4|5|6|7|8][0-9]\d{8}$/;
                 if (value === '') {
                     callback(new Error('请输入手机号！'));
                 } else if( !reg.test(value) ) {
@@ -205,12 +204,12 @@
                         { required: true, message: '请填写密码', trigger: 'blur' },
                         { type: 'string', min: 8, max: 20, message: '密码长度不能小于8位', trigger: 'blur' }
                     ]
-                }
+                },
+                loginName: 'name1'
             }
         },
         created(){
-            //sessionStorage.removeItem('role');
-            //sessionStorage.removeItem('token');
+
         },
         mounted(){
             let _this = this;
@@ -238,7 +237,6 @@
                             }
                         })
                         .then((res) => {
-                            console.log(res.data)
                             let code = res.data.meta.code;
                             if( code === 451 ){
                                 _this.$Message.error("参数验证错误!");
@@ -253,7 +251,7 @@
                                 let token = _this.$jwt.sign(res.data.data, 'u', {
                                     expiresIn: "1days"
                                 })
-                                _this.$store.commit('SAVE_USER', response.data.data);
+                                _this.$store.commit('SAVE_USER', res.data.data);
                                 _this.$setCookie("token",token);
                                 _this.$router.push({path:'/'});
                             }
@@ -271,38 +269,23 @@
                             url: "/register",
                             method: "POST",
                             params: {
-                                phone: this.$refs.formInlineReg.$options.propsData.model.phone,
-                                code: this.$refs.formInlineReg.$options.propsData.model.verifyCode,
-                                password: this.$refs.formInlineReg.$options.propsData.model.password
+                                phone: _this.$refs.formInlineReg.$options.propsData.model.phone,
+                                code: _this.$refs.formInlineReg.$options.propsData.model.verifyCode,
+                                password: _this.$refs.formInlineReg.$options.propsData.model.password
                             }
                         })
                         .then((res) => {
-                            console.log(res.data)
-                            /* let code = res.data.meta.code;
-                            if( code === 451 ){
-                                _this.$Message.error("参数验证错误!");
-                            }else if( code === 452 ){
-                                _this.$Message.error("用户不存在!");
+                            let code = res.data.meta.code;
+                            if( code === 452 ){
+                                _this.$Message.error("手机号已注册!");
                             }else if( code === 453 ){
-                                _this.$Message.error("用户已禁用!");
+                                _this.$Message.error("验证码错误!");
                             }else if( code === 454 ){
-                                _this.$Message.error("密码错误!");
+                                _this.$Message.error("验证码过期!");
                             }else if( code === 200 ){
-                                let token = _this.$jwt.sign(res.data.data, 'sofa', {
-                                    expiresIn: "1days"
-                                })
-                                let role = _this.$jwt.sign({role:"*$%#^"}, 'sofa', {
-                                    expiresIn: "1days"
-                                })
-                                _this.$store.commit('SAVE_USER', res.data.data);
-                                sessionStorage.setItem('token', token);
-                                if( res.data.data.role === '' ){
-                                    sessionStorage.setItem('role',role);
-                                    _this.$router.push({path:'/role'});    
-                                }else{
-                                    _this.$router.push({path:'/'});
-                                }
-                            } */
+                                /*加密得到的信息token*/
+                                _this.loginName = 'name1';
+                            }
                         })
                     } else {
                         this.$Message.error('表单验证失败!');

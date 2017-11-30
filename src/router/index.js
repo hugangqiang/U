@@ -48,6 +48,47 @@ const routers = [
                     }
                 ]
                 
+            },
+            {
+                path: '/user',
+                meta: {
+                    title: '个人中心'
+                },
+                //默认跳转
+                redirect: '/user/set',
+                component: resolve => require(['../components/user/index.vue'], resolve),
+                //以下部分为主页的子模块
+                children: [
+                    {
+                        path: 'set',
+                        meta: {
+                            title: '个人设置'
+                        },
+                        component: resolve => require(['../components/user/set.vue'], resolve)
+                    },
+                    {
+                        path: 'supplier',
+                        meta: {
+                            title: '供应商管理'
+                        },
+                        component: resolve => require(['../components/user/supplier.vue'], resolve)
+                    },
+                    {
+                        path: 'department',
+                        meta: {
+                            title: '部门人员管理'
+                        },
+                        component: resolve => require(['../components/user/department.vue'], resolve)
+                    },
+                    {
+                        path: 'category',
+                        meta: {
+                            title: '类目管理'
+                        },
+                        component: resolve => require(['../components/user/category.vue'], resolve)
+                    }
+                ]
+                
             }
         ]
     }

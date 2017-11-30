@@ -13,6 +13,7 @@ import main from './components/main.vue';
 import jwt from 'jsonwebtoken';
 import echarts from 'echarts';
 import 'iview/dist/styles/iview.css';
+import './components/style/common.css';
 
 
 Vue.use(VueRouter);

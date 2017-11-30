@@ -88,28 +88,28 @@
                         ]
                     },
                     {
-                        title: "系统设置",
+                        title: "个人中心",
                         icon: 'ios-settings-strong',
                         children: [
                             {
-                                subtitle: '用户设置',
+                                subtitle: '个人设置',
                                 icon: 'ios-compose',
-                                href: '/expenditure/list'
+                                href: '/user/set'
                             },
                             {
                                 subtitle: '供应商管理',
                                 icon: 'ios-compose',
-                                href: '/expenditure/add'
+                                href: '/user/supplier'
                             },
                             {
                                 subtitle: '部门人员管理',
                                 icon: 'ios-compose',
-                                href: '/expenditure/add'
+                                href: '/user/department'
                             },
                             {
                                 subtitle: '类目设置',
                                 icon: 'ios-compose',
-                                href: '/expenditure/add'
+                                href: '/user/category'
                             }
                         ]
                     }

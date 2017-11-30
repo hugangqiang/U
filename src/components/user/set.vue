@@ -1,6 +1,9 @@
 <template>
-    <div>
-
+    <div class="u-set">
+        <Card>
+            <p slot="title">个人设置</p>
+            
+        </Card>
     </div>
 </template>
 <script>
