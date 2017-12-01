@@ -251,8 +251,10 @@
                                 let token = _this.$jwt.sign(res.data.data, 'u', {
                                     expiresIn: "1days"
                                 })
+                                
                                 _this.$store.commit('SAVE_USER', res.data.data);
                                 _this.$setCookie("token",token);
+                                console.log(_this.$store.state.userinfo)
                                 _this.$router.push({path:'/'});
                             }
                         })

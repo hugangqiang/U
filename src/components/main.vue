@@ -7,10 +7,10 @@
 <script>
 export default{
     created(){
-        let token = sessionStorage.getItem('token');
+        let token = this.$getCookie('token');
         let _this = this;
         if(token){
-            _this.$jwt.verify(token,"sofa",(err, decoded) => {
+            _this.$jwt.verify(token,"u",(err, decoded) => {
                 if(err){
                     _this.$router.push({path:'/login'});
                 }else{
@@ -18,21 +18,16 @@ export default{
                 }
             })
         }
-
         // http request 拦截器
         this.$ajax.interceptors.request.use(
             config => {
                 // 判断是否存在token，如果存在的话，则每个请求都加上token
-                // if (this.$store.state.userinfo.accessToken) { 
-                //     if( typeof config.params === "undefined" ){
-                //         config.params = {}
-                //     }
-                //     config.params.access_token = this.$store.state.userinfo.accessToken;
-                // }
-                /*if( typeof config.params === "undefined" ){
-                    config.params = {}
+                if (this.$store.state.userinfo.accessToken) { 
+                    if( typeof config.params === "undefined" ){
+                        config.params = {}
+                    }
+                    config.params.access_token = this.$store.state.userinfo.accessToken;
                 }
-                config.params.access_token = 'ace6a48c-11b0-4cfb-9ac0-c1cc39e6caeb'; */
                 return config;
             },
             err => {
