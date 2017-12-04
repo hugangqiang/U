@@ -56,10 +56,15 @@ export default{
 </script>
 <style lang="less">
 	.wrap{
-		background: #f5f5f5;
+        background: #f5f5f5;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        overflow: hidden;
     }
     .layout{
-        width: 1170px;
         margin-left: auto;
         margin-right: auto;
     }

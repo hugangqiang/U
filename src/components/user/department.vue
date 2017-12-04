@@ -7,13 +7,12 @@
                     <Button type="primary" @click.native="depaAdd">新增</Button>
                 </div>
                 <div class="u-table-filter">
-                    
+                    <Tag :class="{active: isActive === 'all'}" @click.native="depaFilter('all')">全部</Tag>
+                    <Tag v-for="(item, index) in depts" :key="item.id" :class="{active: isActive === item.key}" @click.native="depaFilter(item)">{{item.value}}</Tag>
                 </div>
-                <Table stripe :columns="departmentTitle" :data="departmentData"></Table>
-                <div style="margin: 10px;overflow: hidden">
-                    <div style="float: right;">
-                        <Page :total="10" :current="1" @on-change="changePage"></Page>
-                    </div>
+                <Table stripe :columns="departmentTitle" :data="departmentData.rows"></Table>
+                <div class="u-table-page" v-if="departmentData.total > 10">
+                    <Page :total="departmentData.total" :current="1" show-sizer  show-elevator placement="top" @on-change="changePage" @on-page-size-change="changeSizePage"></Page>
                 </div>
             </div>
         </Card>
@@ -68,6 +67,8 @@
                     phone: '',
                     id: ''
                 },
+                isActive: 'all',
+                depts: [],
                 departmentTitle: [
                     {
                         title: '姓名',
@@ -143,24 +144,42 @@
                         }
                     }
                 ],
-                departmentData: []
+                departmentData: {},
+                current: 1,
+                pageSize: 10
             }
         },
-        created(){
-            this.getData()
+        mounted(){
+            this.getData({
+                page: this.current,
+                pageSize: this.pageSize
+            });
+            this.getDepts();
         },
         methods: {
-            getData(){
-                let employeeList = {};
+            getData(employeeList = {}){
                 this.$ajax({
                     url: "/employees",
                     method: "GET",
                     params: employeeList
                 }).then((res) => {
                     if(res.data.meta.code === 200){
-                        this.departmentData = res.data.data.rows;
+                        this.departmentData = res.data.data;
                     }
                 })
+            },
+            getDepts(){
+                /** 
+                 * 获取所有部门
+                */
+                this.$ajax.get('/depts').then((res) => {
+                    if(res.data.meta.code === 200){
+                        this.depts = res.data.data;
+                        for(let i=0; i<this.depts.length; i++){
+                            this.depts[i].isActive = false; 
+                        }
+                    }
+                });
             },
             depaAdd(){
                 /** 
@@ -230,7 +249,11 @@
                             _this.$Notice.success({
                                 title: mes
                             });
-                            _this.getData();
+                            _this.getData({
+                                page: _this.current,
+                                pageSize: _this.pageSize
+                            })
+                            _this.getDepts();
                             _this.depaAddData.modal = false;
                         }
                     })
@@ -254,8 +277,10 @@
             },
             depaIsStop(data){
                 let type = '0';
+                let mes = '停用成功。';
                 if(data.row.status === 'N'){
-                    type = '1'
+                    type = '1';
+                    mes = '启用成功。';
                 }
                 this.$ajax({
                     url: "/employees/enable/"+data.row.id,
@@ -265,7 +290,13 @@
                     }
                 }).then((res) => {
                     if(res.data.meta.code === 200){
-                        this.getData();
+                        this.getData({
+                            page: this.current,
+                            pageSize: this.pageSize
+                        })
+                        this.$Notice.success({
+                            title: mes
+                        });
                     }
                 })
             },
@@ -280,19 +311,45 @@
                             method: "DELETE"
                         }).then((res) => {
                             if(res.data.meta.code === 200){
-                                this.getData();
+                                this.getData({
+                                    page: this.current,
+                                    pageSize: this.pageSize
+                                });
+                                this.getDepts();
                             }
                         })
                     }
                 });
             },
-            mockTableData () {
-                let data = [];
-
-                return data;
+            depaFilter(item){
+                if( item === 'all' ){
+                    this.isActive = 'all';
+                    this.getData({
+                        page: this.current,
+                        pageSize: this.pageSize
+                    })
+                }else{
+                    this.isActive = item.key;
+                    this.getData({
+                        page: this.current,
+                        pageSize: this.pageSize,
+                        departmentId: item.key
+                    })
+                }
             },
-            changePage () {
-                
+            changePage (current) {
+                this.current = current;
+                this.getData({
+                    page: this.current,
+                    pageSize: this.pageSize
+                })
+            },
+            changeSizePage (size){
+                this.pageSize = size;
+                this.getData({
+                    page: this.current,
+                    pageSize: this.pageSize
+                })
             }
         }
     }

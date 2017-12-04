@@ -254,7 +254,6 @@
                                 
                                 _this.$store.commit('SAVE_USER', res.data.data);
                                 _this.$setCookie("token",token);
-                                console.log(_this.$store.state.userinfo)
                                 _this.$router.push({path:'/'});
                             }
                         })

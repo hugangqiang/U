@@ -11,14 +11,32 @@
 .vertical-center-modal .ivu-modal{
     top: 0;
 }
-
+.ivu-page-options-elevator input{
+    height: 30px;
+}
 .u-table-add{
     text-align: right;
 }
 .u-table-filter{
-    margin-top: 30px;
+    margin: 10px 0;
 }
-
+.u-table-filter .ivu-tag{
+    padding: 0 20px;
+    background: #f8f8f9;
+    border: 1px solid #e9eaec;
+    border-radius: 0;
+    font-size: 12px;
+    line-height: 30px;
+    height: 30px;
+    color: #333;
+}
+.u-table-filter .ivu-tag.active{
+    background: #eee;
+}
+.u-table-page{
+    margin: 15px 0 0;
+    overflow: hidden;
+}
 .u-modalAddData label{
     text-align: right;
     width: 100%;
@@ -35,3 +53,25 @@
 .u-modalAddData .ivu-col{
     margin: 5px 0;
 }
+
+
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/  
+::-webkit-scrollbar  {  
+    width: 8px;  
+    height: 16px;  
+    background-color: #f0f0f0;  
+}  
+  
+/*定义滚动条轨道 内阴影+圆角*/  
+::-webkit-scrollbar-track  {  
+    box-shadow: inset 0 0 4px rgba(58, 58, 58, 0.2);  
+    border-radius: 3px;  
+    background-color: #f0f0f0;  
+}  
+  
+/*定义滑块 内阴影+圆角*/  
+::-webkit-scrollbar-thumb {  
+    border-radius: 3px;  
+    box-shadow: inset 0 0 4px rgba(58, 58, 58, 0.2);  
+    background-color: #cecece; 
+}  
