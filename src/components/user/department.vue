@@ -26,25 +26,25 @@
                         <label>姓名</label>
                     </Col>
                     <Col span="20">
-                        <Input v-model="depaAddData.name" placeholder="请输入姓名"></Input>
+                        <Input v-model="depaAddData.name" placeholder="请输入姓名" @on-enter="depaAddOk"></Input>
                     </Col>
                     <Col span="4">
                         <label>部门</label>
                     </Col>
                     <Col span="20">
-                        <Input v-model="depaAddData.department" placeholder="请输入部门"></Input>
+                        <Input v-model="depaAddData.department" placeholder="请输入部门" @on-enter="depaAddOk"></Input>
                     </Col>
                     <Col span="4">
                         <label>邮箱</label>
                     </Col>
                     <Col span="20">
-                        <Input v-model="depaAddData.email" placeholder="请输入邮箱"></Input>
+                        <Input v-model="depaAddData.email" placeholder="请输入邮箱" @on-enter="depaAddOk"></Input>
                     </Col>
                     <Col span="4">
                         <label>手机号</label>
                     </Col>
                     <Col span="20">
-                        <Input v-model="depaAddData.phone" placeholder="请输入手机号"></Input>
+                        <Input v-model="depaAddData.phone" placeholder="请输入手机号" @on-enter="depaAddOk"></Input>
                     </Col>
                 </Row>
             </div>

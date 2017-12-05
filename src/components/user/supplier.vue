@@ -7,7 +7,7 @@
                     <Button type="primary" @click.native="supplierAdd">新增</Button>
                 </div>
                 <div class="u-table-filter">
-
+                    <Input v-model="searchValue" placeholder="搜索" style="width: 300px" @on-change="search"></Input>
                 </div>
                 <Table stripe :columns="supplierTitle" :data="supplierData.rows"></Table>
                 <div class="u-table-page" v-if="supplierData.total > 10">
@@ -15,39 +15,65 @@
                 </div>
             </div>
         </Card>
+        <Modal
+            v-model="supplierAddData.modal"
+            title="新增供应商/修改供应商"
+            class-name="vertical-center-modal">
+            <div class="u-modalAddData">
+                <Row>
+                    <Col span="4">
+                        <label>供应商</label>
+                    </Col>
+                    <Col span="20">
+                        <Input v-model="supplierAddData.supplier" placeholder="请输入供应商" @on-enter="supplierAddOk"></Input>
+                    </Col>
+                    <Col span="4">
+                        <label>联系人</label>
+                    </Col>
+                    <Col span="20">
+                        <Input v-model="supplierAddData.contact" placeholder="请输入联系人" @on-enter="supplierAddOk"></Input>
+                    </Col>
+                    <Col span="4">
+                        <label>手机号</label>
+                    </Col>
+                    <Col span="20">
+                        <Input v-model="supplierAddData.phone" placeholder="请输入手机号" @on-enter="supplierAddOk"></Input>
+                    </Col>
+                </Row>
+            </div>
+            <div slot="footer">
+                <Button type="primary" @click="supplierAddOk">保存</Button>
+            </div>
+        </Modal>
     </div>
 </template>
 <script>
+    import { Spell } from '../js/spell.js';
+    
     export default {
         data () {
             return {
                 supplierAddData: {
                     modal: false,
                     isEdit: false,
-                    name: '',
+                    contact: '',
                     supplier: '',
-                    email: '',
                     phone: '',
                     id: ''
                 },
-                isActive: 'all',
-                depts: [],
+                searchValue: '',
                 supplierTitle: [
                     {
-                        title: '姓名',
+                        title: '供应商',
                         key: 'name'
                     },
                     {
-                        title: '部门',
-                        key: 'supplierName'
-                    },
-                    {
-                        title: '邮箱',
-                        key: 'email'
+                        title: '联系人',
+                        key: 'contacts'
                     },
                     {
                         title: '手机号',
-                        key: 'mobilePhone'
+                        key: 'phone'
                     },
                     {
                         title: '操作',
@@ -74,7 +100,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.depaEdit(params);
+                                            this.supplierEdit(params);
                                         }
                                     }
                                 }, '编辑'),
@@ -88,7 +114,7 @@
                                     },
                                     on: {
                                         click: (e) => {
-                                            this.depaIsStop(params);
+                                            this.supplierIsStop(params);
                                         }
                                     }
                                 }, btnText),
@@ -99,7 +125,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.depaDel(params)
+                                            this.supplierDel(params)
                                         }
                                     }
                                 }, '删除')
@@ -113,11 +139,11 @@
             }
         },
         mounted(){
+            
             this.getData({
                 page: this.current,
                 pageSize: this.pageSize
             });
-            this.getDepts();
         },
         methods: {
             getData(json = {}){
@@ -131,67 +157,37 @@
                     }
                 })
             },
-            getDepts(){
-                /** 
-                 * 获取所有部门
-                */
-                this.$ajax.get('/depts').then((res) => {
-                    if(res.data.meta.code === 200){
-                        this.depts = res.data.data;
-                        for(let i=0; i<this.depts.length; i++){
-                            this.depts[i].isActive = false; 
-                        }
-                    }
-                });
-            },
             supplierAdd(){
                 /** 
                  * 打开添加人模态框
                 */
-                this.supplierAddData.name = '';
+                this.supplierAddData.contact = '';
                 this.supplierAddData.supplier = '';
-                this.supplierAddData.email = '';
                 this.supplierAddData.phone = '';
                 this.supplierAddData.modal = true;
                 this.supplierAddData.isEdit = false;
             },
-            depaEdit(data){
+            supplierEdit(data){
                 /** 
                  * 打开添加人模态框
                 */
-                this.supplierAddData.name = data.row.name;
-                this.supplierAddData.supplier = data.row.supplierName;
-                this.supplierAddData.email = data.row.email;
-                this.supplierAddData.phone = data.row.mobilePhone;
+                this.supplierAddData.contact = data.row.contacts;
+                this.supplierAddData.supplier = data.row.name;
+                this.supplierAddData.phone = data.row.phone;
                 this.supplierAddData.id = data.row.id;
                 this.supplierAddData.isEdit = true;
                 this.supplierAddData.modal = true;
             },
-            depaAddOk(){
+            supplierAddOk(){
                 /** 
                  * 保存添加人员
                 */
-                if(this.supplierAddData.name === ''){
-                    this.$Notice.warning({
-                        title: '请输入姓名！'
-                    });
-                    return;
-                }
                 if(this.supplierAddData.supplier === ''){
                     this.$Notice.warning({
-                        title: '请输入部门！'
+                        title: '请输入供应商名称！'
                     });
                     return;
-                }
-                if(this.supplierAddData.email != ''){
-                    let regEmail = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
-                    if(!regEmail.test(this.supplierAddData.email)){
-                        this.$Notice.warning({
-                            title: '请输入正确的邮箱！'
-                        });
-                        return;
-                    }
-                }
+                }                
                 if(this.supplierAddData.phone != ''){
                     let regPhone = /^1[3|4|5|6|7|8][0-9]\d{8}$/;
                     if(!regPhone.test(this.supplierAddData.phone)){
@@ -202,9 +198,10 @@
                     }
                 }
                 let _this = this;
+                let S = new Spell();
                 function save(method,data,mes){
                     _this.$ajax({
-                        url: "/employees",
+                        url: "/suppliers",
                         method: method,
                         params: data
                     }).then((res) => {
@@ -216,29 +213,32 @@
                                 page: _this.current,
                                 pageSize: _this.pageSize
                             })
-                            _this.getDepts();
                             _this.supplierAddData.modal = false;
                         }
                     })
                 }
+
+                
+                console.log(S.ConvertPinyin("强大"))
+
                 if(this.supplierAddData.isEdit){
                     save('PUT',{
                         id: _this.supplierAddData.id,
-                        name: _this.supplierAddData.name,
-                        supplierName: _this.supplierAddData.supplier,
-                        email: _this.supplierAddData.email,
-                        mobilePhone: _this.supplierAddData.phone
+                        contacts: _this.supplierAddData.contact,
+                        name: _this.supplierAddData.supplier,
+                        shortName: S.ConvertPinyin(_this.supplierAddData.supplier),
+                        phone: _this.supplierAddData.phone
                     },'修改成功。');
                 }else{
                     save('POST',{
-                        name: _this.supplierAddData.name,
-                        supplierName: _this.supplierAddData.supplier,
-                        email: _this.supplierAddData.email,
-                        mobilePhone: _this.supplierAddData.phone
+                        contacts: _this.supplierAddData.contact,
+                        name: _this.supplierAddData.supplier,
+                        shortName: S.ConvertPinyin(_this.supplierAddData.supplier),
+                        phone: _this.supplierAddData.phone
                     },'添加成功。');
                 }
             },
-            depaIsStop(data){
+            supplierIsStop(data){
                 let type = '0';
                 let mes = '停用成功。';
                 if(data.row.status === 'N'){
@@ -246,7 +246,7 @@
                     mes = '启用成功。';
                 }
                 this.$ajax({
-                    url: "/employees/enable/"+data.row.id,
+                    url: "/suppliers/enable/"+data.row.id,
                     method: "PATCH",
                     params: {
                         type: type
@@ -263,14 +263,14 @@
                     }
                 })
             },
-            depaDel(data){
+            supplierDel(data){
                 this.$Modal.confirm({
                     content: '<h3>确认是否删除!</h3>',
                     okText: '是',
                     cancelText: '否',
                     onOk: () => {
                         this.$ajax({
-                            url: "/employees/"+data.row.id,
+                            url: "/suppliers/"+data.row.id,
                             method: "DELETE"
                         }).then((res) => {
                             if(res.data.meta.code === 200){
@@ -278,27 +278,17 @@
                                     page: this.current,
                                     pageSize: this.pageSize
                                 });
-                                this.getDepts();
                             }
                         })
                     }
                 });
             },
-            depaFilter(item){
-                if( item === 'all' ){
-                    this.isActive = 'all';
-                    this.getData({
-                        page: this.current,
-                        pageSize: this.pageSize
-                    })
-                }else{
-                    this.isActive = item.key;
-                    this.getData({
-                        page: this.current,
-                        pageSize: this.pageSize,
-                        supplierId: item.key
-                    })
-                }
+            search(){
+                this.getData({
+                    page: this.current,
+                    pageSize: this.pageSize,
+                    search: this.searchValue
+                })
             },
             changePage (current) {
                 this.current = current;
