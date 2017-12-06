@@ -1,5 +1,6 @@
 .ivu-modal-content,
 .ivu-input,
+.ivu-select-selection,
 .ivu-btn{
     border-radius: 0;
 }
@@ -45,7 +46,9 @@
     line-height: 40px;
     padding: 0 10px;
 }
-.u-modalAddData .ivu-input{
+.u-modalAddData .ivu-input,
+.u-modalAddData .ivu-select-selection,
+.u-modalAddData .ivu-select-input{
     line-height: 40px;
     height: 40px;
     font-size: 14px;
