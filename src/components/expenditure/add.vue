@@ -4,10 +4,10 @@
             <p slot="title">新增支出</p>
             <div class="u-expenditure-content">
                 <Form ref="expenditureForm" :model="expenditureForm" :rules="expenditureRule" inline>
-                    <FormItem prop="departmentId" >
+                    <FormItem prop="departmentId" label="部门">
                         <Input type="text" v-model="expenditureForm.departmentId" placeholder=""></Input>
                     </FormItem>
-                    <FormItem prop="employeeId">
+                    <FormItem prop="employeeId" label="姓名">
                         <Input type="text" v-model="expenditureForm.employeeId" placeholder="Password"></Input>
                     </FormItem>
                     <FormItem>
@@ -26,7 +26,7 @@
                     departmentId: '',
                     employeeId: ''
                 },
-                ruleInline: {
+                expenditureRule: {
                     departmentId: [
                         { required: true, message: 'Please fill in the user name', trigger: 'blur' }
                     ],

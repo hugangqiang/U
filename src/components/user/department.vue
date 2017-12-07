@@ -32,7 +32,9 @@
                         <label>部门</label>
                     </Col>
                     <Col span="20">
-                        <Input v-model="depaAddData.department" placeholder="请输入部门" @on-enter="depaAddOk"></Input>
+                        <AutoComplete v-model="depaAddData.department" placeholder="请输入部门" @on-enter="depaAddOk">
+                            <Option v-for="item in depts" :value="item.value" :key="item.id">{{ item.value }}</Option>
+                        </AutoComplete>
                     </Col>
                     <Col span="4">
                         <label>邮箱</label>

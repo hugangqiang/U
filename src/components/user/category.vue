@@ -26,7 +26,6 @@
                     </Col>
                 </Row>
                 <Row>
-                   
                     <Col span="4">
                         <label>类目</label>
                     </Col>
@@ -102,6 +101,9 @@
                     text = "二级分类";
                 }
                 return h('span', {
+                    "class":{
+                        categoryItem: true
+                    },
                     style: {
                         display: 'inline-block',
                         width: '100%'
@@ -254,10 +256,29 @@
 <style lang="less">
     .u-modalAddData{
         .ivu-btn-group{
-           .ivu-btn.active{
-               background: #2b85e4;
-               color: #fff;
-           }
+            .ivu-btn.active{
+                background: #2b85e4;
+                color: #fff;
+            }
         }
+    }
+    .categoryItem{
+        position: relative;
+        line-height: 45px;
+    }
+    .categoryItem::after{
+        content: '';
+        width: 100%;
+        height: 1px;
+        background: #f0f0f0;
+        position: absolute;
+        left: -20px;
+        bottom: 0;
+    }
+    .ivu-tree ul li{
+        margin: 0 !important;
+    }
+    .ivu-tree li ul{
+        padding: 0 !important;
     }
 </style>

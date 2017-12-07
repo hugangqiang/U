@@ -71,11 +71,16 @@
                 menus: [
                     {
                         title: "支出管理",
-                        icon: 'ios-navigate',
+                        icon: 'calculator',
                         children: [
                             {
+                                subtitle: '支出报表',
+                                icon: 'ios-pulse-strong',
+                                href: '/expenditure/form'
+                            },
+                            {
                                 subtitle: '支出列表',
-                                icon: 'ios-compose',
+                                icon: 'ios-list-outline',
                                 href: '/expenditure/list'
                             },
                             {
@@ -86,38 +91,22 @@
                         ]
                     },
                     {
-                        title: "报表中心",
-                        icon: 'ios-pulse-strong',
-                        children: [
-                            {
-                                subtitle: '支出列表',
-                                icon: 'ios-compose',
-                                href: '/expenditure/lists'
-                            },
-                            {
-                                subtitle: '新增支出',
-                                icon: 'ios-compose',
-                                href: '/expenditure/addd'
-                            }
-                        ]
-                    },
-                    {
                         title: "个人中心",
                         icon: 'ios-settings-strong',
                         children: [
                             {
                                 subtitle: '个人设置',
-                                icon: 'ios-compose',
+                                icon: 'android-settings',
                                 href: '/user/set'
                             },
                             {
                                 subtitle: '供应商管理',
-                                icon: 'ios-compose',
+                                icon: 'social-dribbble-outline',
                                 href: '/user/supplier'
                             },
                             {
                                 subtitle: '部门人员管理',
-                                icon: 'ios-compose',
+                                icon: 'ios-people',
                                 href: '/user/department'
                             },
                             {
@@ -195,6 +184,10 @@
             }
             .ivu-menu{
                 background: #424f63;
+            }
+            .ivu-menu-item>i {
+                margin-right: 4px;
+                font-size: 16px;
             }
             .ivu-menu-dark.ivu-menu-vertical .ivu-menu-opened .ivu-menu-submenu-title{
                 background: #333f50;

@@ -33,6 +33,13 @@ const routers = [
                 //以下部分为主页的子模块
                 children: [
                     {
+                        path: 'form',
+                        meta: {
+                            title: '支付报表'
+                        },
+                        component: resolve => require(['../components/expenditure/form.vue'], resolve)
+                    },
+                    {
                         path: 'list',
                         meta: {
                             title: '支出列表'
