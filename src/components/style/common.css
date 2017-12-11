@@ -1,6 +1,8 @@
 .ivu-modal-content,
 .ivu-input,
 .ivu-select-selection,
+.ivu-input-number-input,
+.ivu-input-number,
 .ivu-btn{
     border-radius: 0;
 }

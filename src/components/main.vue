@@ -22,7 +22,7 @@ export default{
         this.$ajax.interceptors.request.use(
             config => {
                 // 判断是否存在token，如果存在的话，则每个请求都加上token
-                if (this.$store.state.userinfo.accessToken) { 
+                if (this.$store.state.userinfo.accessToken) {
                     if( typeof config.params === "undefined" ){
                         config.params = {}
                     }

@@ -218,9 +218,6 @@
                     })
                 }
 
-                
-                console.log(S.ConvertPinyin("强大"))
-
                 if(this.supplierAddData.isEdit){
                     save('PUT',{
                         id: _this.supplierAddData.id,
