@@ -14,11 +14,15 @@
                     <div class="u-toggle-menu" @click="menuActive = !menuActive">
                         <Icon type="navicon"></Icon>
                     </div>
-                    <Menu theme="dark" width="auto" :open-names="openName" :active-name="activeName" accordion>
+                    <Menu theme="dark" width="auto" :open-names="openName" :active-name="activeName" >
                         <Submenu v-for="(items,indexs) in menus" :key="items.id" :name="indexs+1">
-                            <template slot="title">
+                            <template slot="title" v-if="items.children.length != 0">
                                 <Icon :type="items.icon"></Icon>
                                 <span class="text">{{items.title}}</span>
+                            </template>
+                            <template slot="title" v-else>
+                                <Icon :type="items.icon" @click.native="filePage"></Icon>
+                                <span class="text hideDown" @click="filePage">{{items.title}}</span>
                             </template>
                             <router-link v-for="(item, index) in items.children" :key="item.id" :to="item.href">
                                 <MenuItem :name="(indexs+1) + '-' + (index+1)">
@@ -67,28 +71,33 @@
             return {
                 menuActive: false,
                 activeName: '',
-                openName: [],
+                openName: [1,2,3],
                 menus: [
                     {
                         title: "支出管理",
                         icon: 'calculator',
                         children: [
                             {
-                                subtitle: '支出报表',
-                                icon: 'ios-pulse-strong',
-                                href: '/expenditure/form'
+                                subtitle: '新增支出',
+                                icon: 'ios-compose',
+                                href: '/expenditure/add'
                             },
                             {
-                                subtitle: '支出列表',
+                                subtitle: '支出详情',
                                 icon: 'ios-list-outline',
                                 href: '/expenditure/list'
                             },
                             {
-                                subtitle: '新增支出',
-                                icon: 'ios-compose',
-                                href: '/expenditure/add'
+                                subtitle: '统计中心',
+                                icon: 'ios-pulse-strong',
+                                href: '/expenditure/form'
                             }
                         ]
+                    },
+                    {
+                        title: "资料模板",
+                        icon: 'document',
+                        children: []
                     },
                     {
                         title: "个人中心",
@@ -123,7 +132,7 @@
             for(let i=0; i<this.menus.length; i++){
                 for(let j=0; j<this.menus[i].children.length; j++){
                     if( this.menus[i].children[j].href === this.$route.fullPath ){
-                        this.openName = [i+1];
+                        //this.openName = [i+1];
                         this.activeName = (i+1)+'-'+(j+1);
                     }
                 }
@@ -133,6 +142,9 @@
             document.querySelector('.u-body').style.height = document.documentElement.clientHeight - 60 + 'px';
         },
         methods: {
+            filePage(){
+                console.log('1')
+            },
             logout(){
 				/** 
 				 * 退出登录
@@ -184,6 +196,9 @@
             }
             .ivu-menu{
                 background: #424f63;
+                .text.hideDown + .ivu-menu-submenu-title-icon{
+                    display: none;
+                }
             }
             .ivu-menu-item>i {
                 margin-right: 4px;
