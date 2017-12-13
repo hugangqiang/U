@@ -151,6 +151,8 @@
             },
             expenditureDel(data){
                 console.log(data)
+
+                
             },
             changePage (current) {
                 this.expenditure.current = current;
