@@ -143,7 +143,6 @@
                     if(res.data.meta.code === 200){
                         this.expenditure.total = res.data.data.total;
                         this.expenditure.rows = res.data.data.rows;
-                        console.log(this.expenditure)
                     }
                 })
             },
