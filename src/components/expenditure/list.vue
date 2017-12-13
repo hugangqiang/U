@@ -152,6 +152,7 @@
             expenditureDel(data){
                 console.log(data)
 
+
                 
             },
             changePage (current) {
