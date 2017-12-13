@@ -252,6 +252,7 @@
             },
             addFormTable(){
                 this.expenditure.info.push({
+                    nameValue: [],
                     categoryValue: [],
                     classNameValue: '',
                     num: 1,
@@ -278,6 +279,7 @@
                 this.expenditure.infoRed.splice(index,1);
             },
             infoIsNull(index){
+            
                 let state = true;
                 if(
                     this.expenditure.info[index].nameValue.length === 0 && 
@@ -375,6 +377,7 @@
                         jsonArr.push(json);
                     }
                 }
+                
                 if(jsonArr.length === 0 ){
                     this.$Notice.warning({
                         title: '请最少添加一条支出！'

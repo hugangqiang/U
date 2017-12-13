@@ -4,9 +4,15 @@
             <p slot="title">支出管理</p>
             <div class="u-table">
                 <div class="u-table-add">
-                    <Button type="primary">新增</Button>
+                    <Button type="primary" @click.native="depaAdd">新增</Button>
                 </div>
-                <Table :columns="expenditureCol" :data="expenditureData"></Table>
+                <div class="u-table-filter">
+
+                </div>
+                <Table stripe :columns="expenditureTitle" :data="expenditure.rows"></Table>
+                <div class="u-table-page" v-if="expenditure.total > 10">
+                    <Page :total="expenditure.total" :current="1" show-sizer  show-elevator placement="top" @on-change="changePage" @on-page-size-change="changeSizePage"></Page>
+                </div>
             </div>
         </Card>
     </div>
@@ -15,64 +21,164 @@
     export default {
         data () {
             return {
-                expenditureCol: [
+                expenditureTitle: [
                     {
-                        title: 'Name',
-                        key: 'name'
+                        type: 'index',
+                        width: 50,
+                        align: 'center'
                     },
                     {
-                        title: 'Age',
-                        key: 'age'
+                        title: '部门',
+                        width: 100,
+                        key: 'departmentName'
                     },
                     {
-                        title: 'Address',
-                        key: 'address'
+                        title: '人员',
+                        width: 80,
+                        key: 'employeeName'
+                    },
+                    {
+                        title: '一级项目',
+                        width: 130,
+                        key: 'oneCategoryName'
+                    },
+                    {
+                        title: '二级项目',
+                        width: 130,
+                        key: 'twoCategoryName'
+                    },
+                    {
+                        title: '商品名',
+                        width: 120,
+                        key: 'costName'
+                    },
+                    {
+                        title: '数量',
+                        width: 50,
+                        key: 'number'
+                    },
+                    {
+                        title: '单价',
+                        width: 70,
+                        key: 'unitPrice'
+                    },
+                    {
+                        title: '金额',
+                        width: 80,
+                        key: 'totalAmount'
+                    },
+                    {
+                        title: '供应商',
+                        width: 220,
+                        key: 'supplierName'
+                    },
+                    {
+                        title: '备注',
+                        width: 350,
+                        key: 'remarks'
+                    },
+                    {
+                        title: '时间',
+                        width: 150,
+                        key: 'createTime'
+                    },
+                    {
+                        title: '操作',
+                        key: 'action',
+                        width: 130,
+                        fixed: 'right',
+                        align: 'center',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.expenditureEdit(params);
+                                        }
+                                    }
+                                }, '编辑'),
+                                h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.expenditureDel(params)
+                                        }
+                                    }
+                                }, '删除')
+                            ]);
+                        }
                     }
                 ],
-                expenditureData: [
-                    {
-                        name: 'John Brown',
-                        age: 18,
-                        address: 'New York No. 1 Lake Park',
-                        date: '2016-10-03'
-                    },
-                    {
-                        name: 'Jim Green',
-                        age: 24,
-                        address: 'London No. 1 Lake Park',
-                        date: '2016-10-01'
-                    },
-                    {
-                        name: 'Joe Black',
-                        age: 30,
-                        address: 'Sydney No. 1 Lake Park',
-                        date: '2016-10-02'
-                    },
-                    {
-                        name: 'Jon Snow',
-                        age: 26,
-                        address: 'Ottawa No. 2 Lake Park',
-                        date: '2016-10-04'
-                    }
-                ]
+                expenditure: {
+                    current: 1,
+                    pageSize: 10,
+                    total: 0,
+                    rows: []
+                }
             }
         },
         created(){
-            this.getData()
+            this.getData({
+                page: this.expenditure.current,
+                pageSize: this.expenditure.pageSize
+            });
         },
         methods: {
-            getData(){
+            getData(json = {}){
                 this.$ajax({
                     url: "/expenditures",
                     method: "GET",
-                    params: {}
+                    params: json
                 }).then((res) => {
-                    console.log(res.data)
+                    if(res.data.meta.code === 200){
+                        this.expenditure.total = res.data.data.total;
+                        this.expenditure.rows = res.data.data.rows;
+                        console.log(this.expenditure)
+                    }
+                })
+            },
+            expenditureEdit(data){
+                console.log(data)
+            },
+            expenditureDel(data){
+                console.log(data)
+            },
+            changePage (current) {
+                this.expenditure.current = current;
+                this.getData({
+                    page: this.expenditure.current,
+                    pageSize: this.expenditure.pageSize
+                })
+            },
+            changeSizePage (size){
+                this.expenditure.pageSize = size;
+                this.getData({
+                    page: this.expenditure.current,
+                    pageSize: this.expenditure.pageSize
                 })
             }
         }
     }
 </script>
 <style lang="less">
-
+    .u-expenditure{
+        .ivu-table-cell{
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        .table-mes{
+            min-width: 150px;
+            max-width: 150px;
+        }
+    }
 </style>
