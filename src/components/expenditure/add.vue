@@ -38,12 +38,12 @@
                 <Row :gutter="16" v-for="(item,index) in expenditure.info" :key="item.id" >
                     <Col span="2">
                         <div class="form-table-item" :class="{red:expenditure.infoRed[index].nameValue}">
-                            <Cascader :data="expenditure.names" v-model="item.nameValue" :load-data="loadNameData" filterable></Cascader>
+                            <Cascader :data="expenditure.names" v-model="item.nameValue" filterable></Cascader>
                         </div>
                     </Col>
                     <Col span="2">
                         <div class="form-table-item" :class="{red:expenditure.infoRed[index].categoryValue}">
-                            <Cascader :data="expenditure.categorys" v-model="item.categoryValue" :load-data="loadCategoryData" filterable></Cascader>
+                            <Cascader :data="expenditure.categorys" v-model="item.categoryValue" filterable></Cascader>
                         </div>
                     </Col>
                     <Col span="2">
@@ -162,35 +162,44 @@
                     }
                 })
                 /**
-                * 获取部门
+                * 获取部门人员
                 * */
-                this.$ajax.get("/select/departments").then((res) => {
+                this.$ajax.get("/select/dept-employees").then((res) => {
                     if( res.data.meta.code === 200 ){
                         this.expenditure.names = [];
                         for(let i=0; i<res.data.data.length; i++){
                             this.expenditure.names.push({
                                 value: res.data.data[i].key,
                                 label: res.data.data[i].value,
-                                children: [],
-                                loading: false
+                                children: []
                             })
+                            for(let j=0; j<res.data.data[i].children.length; j++){
+                                this.expenditure.names[i].children.push({
+                                    value: res.data.data[i].children[j].key,
+                                    label: res.data.data[i].children[j].value
+                                })
+                            }
                         }
                     }
                 })
                 /**
                 * 获取一级类目
                 * */
-                this.$ajax.get("/select/categorys/first").then((res) => {
+                this.$ajax.get("/select/categorys").then((res) => {
                     if( res.data.meta.code === 200 ){
                         this.expenditure.categorys = [];
                         for(let i=0; i<res.data.data.length; i++){
-
                             this.expenditure.categorys.push({
                                 value: res.data.data[i].key,
                                 label: res.data.data[i].value,
-                                children: [],
-                                loading: false
+                                children: []
                             })
+                            for(let j=0; j<res.data.data[i].children.length; j++){
+                                this.expenditure.categorys[i].children.push({
+                                    value: res.data.data[i].children[j].key,
+                                    label: res.data.data[i].children[j].value
+                                })
+                            }
                         }
                     }
                 })

@@ -62,6 +62,7 @@ export default{
     .layout{
         margin-left: auto;
         margin-right: auto;
+        width: 1200px;
     }
     @media (min-width: 1851px ) {
         .layout{
