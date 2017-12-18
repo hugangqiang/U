@@ -1,5 +1,5 @@
 <template>
-    <div class="u-expenditure">
+    <div class="u-expenditure-add">
         <Card>
             <p slot="title">新增支出</p>
             <div class="u-expenditure-content">
@@ -425,7 +425,7 @@
     }
 </script>
 <style lang="less">
-    .u-expenditure{
+    .u-expenditure-add{
         .center{
             text-align: center;
         }

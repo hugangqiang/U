@@ -1,13 +1,37 @@
 <template>
-    <div class="u-expenditure">
+    <div class="u-expenditure-list">
         <Card>
             <p slot="title">支出管理</p>
-            <div class="u-table">
-                <div class="u-table-add">
+            <div slot="extra">
+                <router-link to="/expenditure/add">
                     <Button type="primary" @click.native="depaAdd">新增</Button>
-                </div>
+                </router-link>
+            </div>
+            <div class="u-table">
                 <div class="u-table-filter">
-
+                    <DatePicker type="daterange" placement="bottom-start" placeholder="请选择起止日期" style="width: 200px"></DatePicker>
+                    <Select v-model="model1" style="width:200px" placeholder="请选择类目">
+                        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <Select v-model="model1" style="width:200px" placeholder="请选择子类目">
+                        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <Select v-model="model1" style="width:200px" placeholder="请选择供应商">
+                        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <Select v-model="model1" style="width:200px" placeholder="请选择部门">
+                        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <Select v-model="model1" style="width:200px" placeholder="请选择人员">
+                        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <AutoComplete
+                        v-model="model1"
+                        placeholder="请输入商品名称"
+                        style="width:200px">
+                        <Option v-for="item in data2" :value="item" :key="item">{{ item }}</Option>
+                    </AutoComplete>
+                    <Button type="primary">查询</Button>
                 </div>
                 <Table stripe :columns="expenditureTitle" :data="expenditure.rows"></Table>
                 <div class="u-table-page" v-if="expenditure.total > 10">
@@ -124,7 +148,35 @@
                     pageSize: 10,
                     total: 0,
                     rows: []
-                }
+                },
+                cityList: [
+                    {
+                        value: 'New York',
+                        label: 'New York'
+                    },
+                    {
+                        value: 'London',
+                        label: 'London'
+                    },
+                    {
+                        value: 'Sydney',
+                        label: 'Sydney'
+                    },
+                    {
+                        value: 'Ottawa',
+                        label: 'Ottawa'
+                    },
+                    {
+                        value: 'Paris',
+                        label: 'Paris'
+                    },
+                    {
+                        value: 'Canberra',
+                        label: 'Canberra'
+                    }
+                ],
+                model1: '',
+                data2: ['签字笔','iphone','mac','饮水机','卫生纸','显示器','鼠标','键盘']
             }
         },
         created(){
@@ -170,7 +222,7 @@
     }
 </script>
 <style lang="less">
-    .u-expenditure{
+    .u-expenditure-list{
         .ivu-table-cell{
             padding-left: 8px;
             padding-right: 8px;
