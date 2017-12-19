@@ -199,11 +199,13 @@
                 })
             },
             expenditureEdit(data){
+                
                 console.log(data)
             },
             expenditureDel(data){
+
                 console.log(data)
-                
+
             },
             changePage (current) {
                 this.expenditure.current = current;
