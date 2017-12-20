@@ -221,6 +221,7 @@
                     pageSize: this.expenditure.pageSize
                 })
             }
+            
         }
     }
 </script>
