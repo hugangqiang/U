@@ -5,31 +5,163 @@
             <div class="u-set-content">
                 <div class="u-user-info">
                     <div class="user-img">
-                        <img src="../images/user-img.png" alt="">
+                        <div>
+                            <img src="../images/user-img.png" alt="">
+                        </div>
+                        <Button type="primary">修改头像</Button>
                     </div>
-                    <div class="user-company center input-box">
-                        <label class="input-text">公司</label>
-                        <Input  placeholder="请输入公司名称"></Input>   
+                    <div class="user-group">
+                        <div class="title">基本资料</div>
+                        <div class="item">
+                            <Row>
+                                <Col span="5">
+                                    <span class="name">公司名称</span>
+                                </Col>
+                                <Col span="14">
+                                    <span class="text">请输入您所在公司全称</span>
+                                </Col>
+                                <Col span="5">
+                                    <div class="operation">
+                                        <span class="onSet">
+                                            <Icon type="ios-information"></Icon>
+                                            <span>未设置</span>
+                                        </span>
+                                        <span class="yesSet">
+                                            <Icon type="ios-checkmark"></Icon>
+                                            <span>已设置</span>
+                                        </span>
+                                        <span class="sep">|</span>
+                                        <span>修改</span>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
+                        <div class="item">
+                            <Row>
+                                <Col span="5">
+                                    <span class="name">用户名</span>
+                                </Col>
+                                <Col span="14">
+                                    <span class="text">用户名是您在U行政的昵称</span>
+                                </Col>
+                                <Col span="5">
+                                    <div class="operation">
+                                        <span class="onSet">
+                                            <Icon type="ios-information"></Icon>
+                                            <span>未设置</span>
+                                        </span>
+                                        <span class="yesSet">
+                                            <Icon type="ios-checkmark"></Icon>
+                                            <span>已设置</span>
+                                        </span>
+                                        <span class="sep">|</span>
+                                        <span>修改</span>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
                     </div>
-                    <div class="user-company center  input-box">
-                        <label class="input-text">用户名</label>
-                        <Input  placeholder="请设置用户名"></Input>   
+                    <div class="user-group">
+                        <div class="title">账号关联</div>
+                        <div class="item">
+                            <Row>
+                                <Col span="5">
+                                    <span class="name">绑定手机号</span>
+                                </Col>
+                                <Col span="14">
+                                    <span class="text">17521015175</span>
+                                </Col>
+                                <Col span="5">
+                                    <div class="operation">
+                                        <span class="onSet">
+                                            <Icon type="ios-information"></Icon>
+                                            <span>未设置</span>
+                                        </span>
+                                        <span class="yesSet">
+                                            <Icon type="ios-checkmark"></Icon>
+                                            <span>已设置</span>
+                                        </span>
+                                        <span class="sep">|</span>
+                                        <span>修改</span>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
+                        <div class="item">
+                            <Row>
+                                <Col span="5">
+                                    <span class="name">绑定邮箱</span>
+                                </Col>
+                                <Col span="14">
+                                    <span class="text">请输入您的邮箱</span>
+                                </Col>
+                                <Col span="5">
+                                    <div class="operation">
+                                        <span class="onSet">
+                                            <Icon type="ios-information"></Icon>
+                                            <span>未设置</span>
+                                        </span>
+                                        <span class="yesSet">
+                                            <Icon type="ios-checkmark"></Icon>
+                                            <span>已设置</span>
+                                        </span>
+                                        <span class="sep">|</span>
+                                        <span>修改</span>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
+                        <div class="item">
+                            <Row>
+                                <Col span="5">
+                                    <span class="name">绑定微信</span>
+                                </Col>
+                                <Col span="14">
+                                    <span class="text">微信名称</span>
+                                </Col>
+                                <Col span="5">
+                                    <div class="operation">
+                                        <span class="onSet">
+                                            <Icon type="ios-information"></Icon>
+                                            <span>未设置</span>
+                                        </span>
+                                        <span class="yesSet">
+                                            <Icon type="ios-checkmark"></Icon>
+                                            <span>已设置</span>
+                                        </span>
+                                        <span class="sep">|</span>
+                                        <span>修改</span>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
                     </div>
-                    <div class="user-title">账户绑定</div>
-                    <div class="user-phone center  input-box">
-                        <label class="input-text">已绑定手机号</label>
-                        <Input  placeholder=""></Input>   
-                    </div>
-                    <div class="user-email center  input-box">
-                        <label class="input-text">已绑定邮箱</label>
-                        <Input  placeholder=""></Input>   
-                    </div>
-                    <div class="user-wx center  input-box">
-                        <label class="input-text">已绑定微信</label>
-                        <Input  placeholder=""></Input>   
-                    </div>
-                    <div class="save-btn center input-box">
-                        <Button type="primary">保存</Button>
+                    <div class="user-group">
+                        <div class="title">安全设置</div>
+                        <div class="item">
+                            <Row>
+                                <Col span="5">
+                                    <span class="name">登录密码</span>
+                                </Col>
+                                <Col span="14">
+                                    <span class="text">登录所用到的密码</span>
+                                </Col>
+                                <Col span="5">
+                                    <div class="operation">
+                                        <span class="onSet">
+                                            <Icon type="ios-information"></Icon>
+                                            <span>未设置</span>
+                                        </span>
+                                        <span class="yesSet">
+                                            <Icon type="ios-checkmark"></Icon>
+                                            <span>已设置</span>
+                                        </span>
+                                        <span class="sep">|</span>
+                                        <span>修改</span>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -54,39 +186,65 @@
 <style lang="less">
     .u-set-content{
         .u-user-info{
+            max-width: 980px;
+            margin: 0 auto;
             .user-img{
                 text-align: center;
+                margin-bottom: 80px;
                 img{
                     width: 100px;
                     height: 100px;
                     border-radius: 100%;
                 }
+                .ivu-btn{
+                    margin-top: 15px;
+                }
             }
-            .center{
-                text-align: center;
+            .user-group{
+                margin-bottom: 80px;
+                line-height: 80px;
+                .title{
+                    font-size: 28px;
+                }
+                .item{
+                    line-height: 70px;
+                    border-bottom: 1px solid #d9d9d9;
+                    .name{
+                        font-size: 14px;
+                        font-weight: bold;
+                    }
+                    .text{
+                        font-size: 14px;
+                        color: #999;
+                    }
+                    .operation{
+                        font-size: 14px;
+                        .ivu-icon{
+                            font-size: 20px;
+                            position: relative;
+                            top: 2px;
+                        }
+                        .yesSet{
+                            color: #32aa1d;
+                        }
+                        .onSet{
+                            color: #ffa200;
+                        }
+                        .edit{
+                            color: #2d8cf0;
+                        }
+                        .sep{
+                            color: #bebebe;
+                            margin: 0 5px;
+                            display: inline-block;
+                            position: relative;
+                            top: -1px;
+                        }
+                    }
+                }
+                
             }
-            .input-box{
-                margin-top: 15px;
-                line-height: 40px;
-            }
-            .input-text{
-                margin-right: 10px;
-                width: 100px;
-                display: inline-block;
-                text-align: right;
-            }
-            .ivu-input-wrapper{
-                width: auto;
-            }
-            .ivu-input{
-                min-width: 300px;
-                max-width: 400px;
-                height: 40px;
-            }
-            .user-title{
-                font-size: 18px;
-                line-height: 50px;
-            }
+            
         }
     }
 </style>
