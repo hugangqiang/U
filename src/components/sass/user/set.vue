@@ -6,7 +6,7 @@
                 <div class="u-user-info">
                     <div class="user-img">
                         <div>
-                            <img src="../images/user-img.png" alt="">
+                            <img src="../../images/user-img.png" alt="">
                         </div>
                         <Button type="primary">修改头像</Button>
                     </div>

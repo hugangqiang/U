@@ -1,5 +1,5 @@
-!(function(window, document) {
-	function GVerify(options) { //创建一个图形验证码对象，接收options对象为参数
+
+export	function GVerify(options) { //创建一个图形验证码对象，接收options对象为参数
 		this.options = { //默认options参数值
 			id: "", //容器Id
 			canvasId: "verifyCanvas", //canvas的ID
@@ -110,11 +110,10 @@
 		validate: function(code){
 			var code = code.toLowerCase();
 			var v_code = this.options.code.toLowerCase();
-			console.log(v_code);
 			if(code == v_code){
 				return true;
 			}else{
-				this.refresh();
+				//this.refresh();
 				return false;
 			}
 		}
@@ -135,5 +134,4 @@
 		var b = randomNum(min, max);
 		return "rgb(" + r + "," + g + "," + b + ")";
 	}
-	window.GVerify = GVerify;
-})(window, document);
+	

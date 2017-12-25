@@ -48,7 +48,7 @@
     </div>
 </template>
 <script>
-    import { Spell } from '../js/spell.js';
+    import { Spell } from '../../js/spell.js';
     
     export default {
         data () {

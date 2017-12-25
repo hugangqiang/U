@@ -4,10 +4,10 @@
             <div class="u-layout-left">
                 <router-link to="/">
                     <div class="logo" v-if="!menuActive">
-                        <img src="./images/logo.png" alt="">                    
+                        <img src="../images/logo.png" alt="">                    
                     </div>
                     <div class="logo" v-else>
-                        <img src="./images/logo-mini.png" alt="">                    
+                        <img src="../images/logo-mini.png" alt="">                    
                     </div>
                 </router-link>
                 <div class="u-left-menu">
@@ -45,15 +45,10 @@
                         <span>设置</span>
                     </div>
                     <div class="item">
-                        <Icon type="ios-calendar-outline"></Icon>
-                        <span>签到</span>
-                    </div>
-                    <div class="item">
                         <Icon type="person"></Icon>
                         <span>{{this.$store.state.userinfo.phone}}</span>
                         <div class="u-submenu">
                             <div class="subitem">基本资料</div>
-                            <div class="subitem">签到积分</div>
                             <div class="subitem" @click="logout">退出</div>
                         </div>
                     </div>
@@ -80,17 +75,17 @@
                             {
                                 subtitle: '新增支出',
                                 icon: 'ios-compose',
-                                href: '/expenditure/add'
+                                href: '/sass/expenditure/add'
                             },
                             {
                                 subtitle: '支出详情',
                                 icon: 'ios-list-outline',
-                                href: '/expenditure/list'
+                                href: '/sass/expenditure/list'
                             },
                             {
                                 subtitle: '统计中心',
                                 icon: 'ios-pulse-strong',
-                                href: '/expenditure/form'
+                                href: '/sass/expenditure/form'
                             }
                         ]
                     },
@@ -106,22 +101,22 @@
                             {
                                 subtitle: '个人设置',
                                 icon: 'android-settings',
-                                href: '/user/set'
+                                href: '/sass/user/set'
                             },
                             {
                                 subtitle: '供应商管理',
                                 icon: 'social-dribbble-outline',
-                                href: '/user/supplier'
+                                href: '/sass/user/supplier'
                             },
                             {
                                 subtitle: '部门人员管理',
                                 icon: 'ios-people',
-                                href: '/user/department'
+                                href: '/sass/user/department'
                             },
                             {
                                 subtitle: '类目设置',
                                 icon: 'ios-compose',
-                                href: '/user/category'
+                                href: '/sass/user/category'
                             }
                         ]
                     }

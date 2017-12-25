@@ -38,7 +38,7 @@ module.exports = merge(webpackBaseConfig, {
         }),
         new HtmlWebpackPlugin({
             //favicon路径                     
-            //favicon:'src/favicon.ico', 
+            favicon: path.resolve(__dirname, './src/components/images/favicon.ico'),
             //需要修改入口js的文件地址
             filename: path.resolve(__dirname, 'dist/index.html'),
             //修改的模板

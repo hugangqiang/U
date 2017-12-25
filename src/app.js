@@ -75,15 +75,28 @@ router.beforeEach((to, from, next) => {
     if(!to.matched.some(res => res.meta.requireAuth)){
         /*判断是否登录*/
         if(getCookie("token")){
+            
             next();
         }else{
             /*没有登录跳到登录页面*/
             next({
-                path: '/login',
+                path: '/auth/login',
                 query: {redirect: to.fullPath}
             })
         }
     }
+    
+    if(getCookie("token")){
+        if(to.matched.some(res => res.meta.isAuth)){
+            /*没有登录跳到登录页面*/
+            next({
+                path: '/',
+                query: {redirect: to.fullPath}
+            })
+            
+        }
+    }
+    
     next();
 });
 
