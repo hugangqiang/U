@@ -14,7 +14,7 @@ const routers = [
             requireAuth: true,
             isAuth: true
         },
-        component: resolve => require(['../components/auth/index.vue'], resolve),
+        component: resolve => require(['../components/auth/main.vue'], resolve),
         redirect: '/auth/login',
         children: [
             {
@@ -47,9 +47,76 @@ const routers = [
         ]
     },
     {
+        path: '/file',
+        meta: {
+            title: '资料下载',
+            requireAuth: true
+        },
+        component: resolve => require(['../components/file/main.vue'], resolve),
+        redirect: '/file/list',
+        children: [
+            {
+                path: 'list',
+                meta: {
+                    title: '资料列表',
+                    requireAuth: true
+                },
+                component: resolve => require(['../components/file/list.vue'], resolve),
+                redirect: '/file/list/index',
+                children: [
+                    {
+                        path: 'index',
+                        meta: {
+                            title: '资料下载',
+                            requireAuth: true
+                        },
+                        component: resolve => require(['../components/file/index.vue'], resolve)
+                    },
+                    {
+                        path: 'search',
+                        meta: {
+                            title: '搜索列表',
+                            requireAuth: true
+                        },
+                        component: resolve => require(['../components/file/search.vue'], resolve)
+                    },
+                    {
+                        path: 'collection',
+                        meta: {
+                            title: '我的收藏'
+                        },
+                        component: resolve => require(['../components/file/collection.vue'], resolve)
+                    },
+                    {
+                        path: 'publish',
+                        meta: {
+                            title: '我的发布'
+                        },
+                        component: resolve => require(['../components/file/publish.vue'], resolve)
+                    },
+                    {
+                        path: 'view',
+                        meta: {
+                            title: '文件预览'
+                        },
+                        component: resolve => require(['../components/file/view.vue'], resolve)
+                    }
+                ]
+            },
+            {
+                path: 'list',
+                meta: {
+                    title: '搜索列表',
+                    requireAuth: true
+                },
+                component: resolve => require(['../components/file/list.vue'], resolve)
+            }
+        ]
+    },
+    {
         path: '/sass',
         //依赖部分
-        component: resolve => require(['../components/sass/index.vue'], resolve),
+        component: resolve => require(['../components/sass/main.vue'], resolve),
         //默认跳转
         redirect: '/sass/index',
         //以下部分为主页的子模块
@@ -59,7 +126,7 @@ const routers = [
                 meta: {
                     title: '首页'
                 },
-                component: resolve => require(['../components/sass/sass.vue'], resolve)
+                component: resolve => require(['../components/sass/index.vue'], resolve)
             },
             {
                 path: 'expenditure',
@@ -68,7 +135,7 @@ const routers = [
                 },
                 //默认跳转
                 redirect: '/sass/expenditure/list',
-                component: resolve => require(['../components/sass/expenditure/index.vue'], resolve),
+                component: resolve => require(['../components/sass/expenditure/main.vue'], resolve),
                 //以下部分为主页的子模块
                 children: [
                     {
@@ -102,7 +169,7 @@ const routers = [
                 },
                 //默认跳转
                 redirect: '/sass/user/set',
-                component: resolve => require(['../components/sass/user/index.vue'], resolve),
+                component: resolve => require(['../components/sass/user/main.vue'], resolve),
                 //以下部分为主页的子模块
                 children: [
                     {

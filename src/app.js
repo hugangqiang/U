@@ -72,17 +72,19 @@ router.beforeEach((to, from, next) => {
     * 路由拦截
     * 需要登录,是否需要登录权限
     */
+    
     if(!to.matched.some(res => res.meta.requireAuth)){
         /*判断是否登录*/
-        if(getCookie("token")){
-            
+        if(getCookie("token") != null){
             next();
+            return;
         }else{
             /*没有登录跳到登录页面*/
             next({
                 path: '/auth/login',
                 query: {redirect: to.fullPath}
             })
+            return;
         }
     }
     
@@ -93,10 +95,9 @@ router.beforeEach((to, from, next) => {
                 path: '/',
                 query: {redirect: to.fullPath}
             })
-            
+            return;
         }
     }
-    
     next();
 });
 
