@@ -62,7 +62,6 @@ export default{
 </script>
 <style lang="less">
 	.wrap{
-        background: #f5f5f5;
         position: relative;
     }
     .layout{

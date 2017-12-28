@@ -10,7 +10,7 @@
                 <Row>
                     <Col span="18">
                         <div class="center">
-                            <Input  v-model="value" placeholder="请输入搜索关键字">
+                            <Input  v-model="searchValue" placeholder="请输入搜索关键字">
                                 <Button slot="append">搜索</Button>
                             </Input>
                             <div class="hotTag">
@@ -67,7 +67,7 @@
     export default {
         data () {
             return {
-               
+                searchValue: ''
             }
         },
         created(){

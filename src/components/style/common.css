@@ -60,6 +60,20 @@
 }
 
 
+.type-img{
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+}
+.type-img.word{
+    background: url("../images/word.png");
+}
+.type-img.excel{
+    background: url("../images/excel.png");
+}
+.type-img.ppt{
+    background: url("../images/powerpoint.png");
+}
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/  
 ::-webkit-scrollbar  {  
     width: 8px;  
