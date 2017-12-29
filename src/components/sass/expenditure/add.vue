@@ -263,6 +263,7 @@
         created(){
             this.getData();
 
+            /* 获取所有部门 */
             this.getDepts();
             this.getEmployees();
         },
@@ -303,7 +304,27 @@
                         this.expenditure.suppliers = res.data.data;
                     }
                 })
-                
+                /**
+                * 获取部门人员
+                * */
+                this.$ajax.get("/select/dept-employees").then((res) => {
+                    if( res.data.meta.code === 200 ){
+                        this.expenditure.names = [];
+                        for(let i=0; i<res.data.data.length; i++){
+                            this.expenditure.names.push({
+                                value: res.data.data[i].key,
+                                label: res.data.data[i].value,
+                                children: []
+                            })
+                            for(let j=0; j<res.data.data[i].children.length; j++){
+                                this.expenditure.names[i].children.push({
+                                    value: res.data.data[i].children[j].key,
+                                    label: res.data.data[i].children[j].value
+                                })
+                            }
+                        }
+                    }
+                })
                 /**
                 * 获取一级类目
                 * */
@@ -337,30 +358,10 @@
                     }
                 });
             },
-            getEmployees(){
-                /**
-                * 获取部门人员
-                * */
-                this.$ajax.get("/select/dept-employees").then((res) => {
-                    if( res.data.meta.code === 200 ){
-                        this.expenditure.names = [];
-                        for(let i=0; i<res.data.data.length; i++){
-                            this.expenditure.names.push({
-                                value: res.data.data[i].key,
-                                label: res.data.data[i].value,
-                                children: []
-                            })
-                            for(let j=0; j<res.data.data[i].children.length; j++){
-                                this.expenditure.names[i].children.push({
-                                    value: res.data.data[i].children[j].key,
-                                    label: res.data.data[i].children[j].value
-                                })
-                            }
-                        }
-                    }
-                })
-            },
             getCategorys(){
+                /** 
+                 * 获取类目
+                */
                 this.$ajax.get('/categorys').then((res) => {
                     if(res.data.meta.code === 200){
                         this.categoryData = [];
