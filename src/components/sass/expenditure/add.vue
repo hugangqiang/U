@@ -5,13 +5,19 @@
             <div class="u-expenditure-content">
                 <Row :gutter="16">
                     <Col span="2">
-                        <div class="form-table-title">姓名</div>
+                        <div class="form-table-title">
+                            <span>人员</span>
+                            <span class="add" @click="depaAdd">新增+</span>
+                        </div>
+                    </Col>
+                    <Col span="2">
+                        <div class="form-table-title">
+                            <span>支出类目</span>
+                            <span class="add" @click="categoryAdd">新增+</span>
+                        </div>
                     </Col>
                     <Col span="2">
                         <div class="form-table-title">商品名</div>
-                    </Col>
-                    <Col span="2">
-                        <div class="form-table-title">类名</div>
                     </Col>
                     <Col span="2">
                         <div class="form-table-title">数量</div>
@@ -23,7 +29,10 @@
                         <div class="form-table-title">总金额</div>
                     </Col>
                     <Col span="3">
-                        <div class="form-table-title">供应商</div>
+                        <div class="form-table-title">
+                            <span>供应商</span>
+                            <span class="add" @click="supplierAdd">新增+</span>
+                        </div>
                     </Col>
                     <Col span="3">
                         <div class="form-table-title">支出时间</div>
@@ -104,12 +113,140 @@
                 </div>
             </div>
         </Card>
+        <Modal
+            v-model="depaAddData.modal"
+            title="新增人员/修改人员"
+            class-name="vertical-center-modal">
+            <div class="u-modalAddData">
+                <Row>
+                    <Col span="4">
+                        <label>姓名</label>
+                    </Col>
+                    <Col span="20">
+                        <Input v-model="depaAddData.name" placeholder="请输入姓名" @on-enter="depaAddOk"></Input>
+                    </Col>
+                    <Col span="4">
+                        <label>部门</label>
+                    </Col>
+                    <Col span="20">
+                        <AutoComplete v-model="depaAddData.department" placeholder="请输入部门" @on-enter="depaAddOk">
+                            <Option v-for="item in depts" :value="item.value" :key="item.id">{{ item.value }}</Option>
+                        </AutoComplete>
+                    </Col>
+                    <Col span="4">
+                        <label>邮箱</label>
+                    </Col>
+                    <Col span="20">
+                        <Input v-model="depaAddData.email" placeholder="请输入邮箱" @on-enter="depaAddOk"></Input>
+                    </Col>
+                    <Col span="4">
+                        <label>手机号</label>
+                    </Col>
+                    <Col span="20">
+                        <Input v-model="depaAddData.phone" placeholder="请输入手机号" @on-enter="depaAddOk"></Input>
+                    </Col>
+                </Row>
+            </div>
+            <div slot="footer">
+                <Button type="primary" @click="depaAddOk">保存</Button>
+            </div>
+        </Modal>
+        <Modal
+            v-model="categoryAddData.modal"
+            title="新增类目/修改类目"
+            class-name="vertical-center-modal">
+            <div class="u-modalAddData">
+                <Row>
+                     <Col span="4" v-show="categoryData.length > 0">
+                        <label>选择级别</label>
+                    </Col>
+                    <Col span="18" v-show="categoryData.length > 0">
+                        <ButtonGroup>
+                            <Button :class="{active: categoryAddData.rankActive === '1'}" @click="categoryAddData.rankActive = '1'">一级</Button>
+                            <Button :class="{active: categoryAddData.rankActive === '2'}" @click="categoryAddData.rankActive = '2'">二级</Button>
+                        </ButtonGroup>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span="4">
+                        <label>类目</label>
+                    </Col>
+                    <Col span="20">
+                        <Input v-model="categoryAddData.category" placeholder="请输入类目" @on-enter="categoryAddOk"></Input>
+                    </Col>
+                    <Col span="4" v-show="categoryAddData.rankActive === '2'">
+                        <label>父级</label>
+                    </Col>
+                    <Col span="20" v-show="categoryAddData.rankActive === '2'">
+                        <Select v-model="categoryAddData.parentId" filterable>
+                            <Option v-for="item in categoryData" :value="item.id" :key="item.id">{{ item.title }}</Option>
+                        </Select>
+                    </Col>
+                </Row>
+            </div>
+            <div slot="footer">
+                <Button type="primary" @click="categoryAddOk">保存</Button>
+            </div>
+        </Modal>
+        <Modal
+            v-model="supplierAddData.modal"
+            title="新增供应商/修改供应商"
+            class-name="vertical-center-modal">
+            <div class="u-modalAddData">
+                <Row>
+                    <Col span="4">
+                        <label>供应商</label>
+                    </Col>
+                    <Col span="20">
+                        <Input v-model="supplierAddData.supplier" placeholder="请输入供应商" @on-enter="supplierAddOk"></Input>
+                    </Col>
+                    <Col span="4">
+                        <label>联系人</label>
+                    </Col>
+                    <Col span="20">
+                        <Input v-model="supplierAddData.contact" placeholder="请输入联系人" @on-enter="supplierAddOk"></Input>
+                    </Col>
+                    <Col span="4">
+                        <label>手机号</label>
+                    </Col>
+                    <Col span="20">
+                        <Input v-model="supplierAddData.phone" placeholder="请输入手机号" @on-enter="supplierAddOk"></Input>
+                    </Col>
+                </Row>
+            </div>
+            <div slot="footer">
+                <Button type="primary" @click="supplierAddOk">保存</Button>
+            </div>
+        </Modal>
     </div>
 </template>
 <script>
+    import { Spell } from '../../js/spell.js';
     export default {
         data () {
             return {
+                depaAddData: {
+                    modal: false,
+                    name: '',
+                    department: '',
+                    email: '',
+                    phone: '',
+                    id: ''
+                },
+                categoryAddData: {
+                    modal: false,
+                    category: '',
+                    parentId: '',
+                    rankActive: '1',
+                    id: ''
+                },
+                supplierAddData: {
+                    modal: false,
+                    contact: '',
+                    supplier: '',
+                    phone: '',
+                    id: ''
+                },
                 expenditure: {
                     total: 0,
                     names: [],
@@ -118,11 +255,16 @@
                     className: [],
                     info: [],
                     infoRed: []
-                }
+                },
+                depts: [],
+                categoryData: []
             }
         },
         created(){
-            this.getData()
+            this.getData();
+
+            this.getDepts();
+            this.getEmployees();
         },
         methods: {
             getData(){
@@ -153,7 +295,7 @@
                         mes: false
                     })
                 }
-                /**
+                /**-
                 * 获取供应商
                 * */
                 this.$ajax.get("/select/suppliers").then((res) => {
@@ -161,27 +303,7 @@
                         this.expenditure.suppliers = res.data.data;
                     }
                 })
-                /**
-                * 获取部门人员
-                * */
-                this.$ajax.get("/select/dept-employees").then((res) => {
-                    if( res.data.meta.code === 200 ){
-                        this.expenditure.names = [];
-                        for(let i=0; i<res.data.data.length; i++){
-                            this.expenditure.names.push({
-                                value: res.data.data[i].key,
-                                label: res.data.data[i].value,
-                                children: []
-                            })
-                            for(let j=0; j<res.data.data[i].children.length; j++){
-                                this.expenditure.names[i].children.push({
-                                    value: res.data.data[i].children[j].key,
-                                    label: res.data.data[i].children[j].value
-                                })
-                            }
-                        }
-                    }
-                })
+                
                 /**
                 * 获取一级类目
                 * */
@@ -203,13 +325,65 @@
                         }
                     }
                 })
-                /* this.$ajax({
-                    url: "/expenditures",
-                    method: "GET",
-                    params: {}
-                }).then((res) => {
-                    console.log(res.data)
-                }) */
+            },
+            getDepts(){
+                /** 
+                 * 获取所有部门
+                */
+                this.$ajax.get('/depts').then((res) => {
+                    if(res.data.meta.code === 200){
+                        this.depts = res.data.data;
+                        console.log(this.depts)
+                    }
+                });
+            },
+            getEmployees(){
+                /**
+                * 获取部门人员
+                * */
+                this.$ajax.get("/select/dept-employees").then((res) => {
+                    if( res.data.meta.code === 200 ){
+                        this.expenditure.names = [];
+                        for(let i=0; i<res.data.data.length; i++){
+                            this.expenditure.names.push({
+                                value: res.data.data[i].key,
+                                label: res.data.data[i].value,
+                                children: []
+                            })
+                            for(let j=0; j<res.data.data[i].children.length; j++){
+                                this.expenditure.names[i].children.push({
+                                    value: res.data.data[i].children[j].key,
+                                    label: res.data.data[i].children[j].value
+                                })
+                            }
+                        }
+                    }
+                })
+            },
+            getCategorys(){
+                this.$ajax.get('/categorys').then((res) => {
+                    if(res.data.meta.code === 200){
+                        this.categoryData = [];
+                        for(let i=0; i<res.data.data.length; i++){
+                            this.categoryData.push({
+                                title: res.data.data[i].name,
+                                id: res.data.data[i].id,
+                                parentId: res.data.data[i].parentId,
+                                level: res.data.data[i].level,
+                                expand: true,
+                                children: []
+                            })
+                            for(let j=0; j<res.data.data[i].childrens.length; j++){
+                                this.categoryData[i].children.push({
+                                    title: res.data.data[i].childrens[j].name,
+                                    id: res.data.data[i].childrens[j].id,
+                                    parentId: res.data.data[i].childrens[j].parentId,
+                                    level: res.data.data[i].childrens[j].level
+                                })
+                            }
+                        }
+                    }
+                })
             },
             classNameSearch(value){
                 let arr = ['签字笔','iphone','mac','饮水机','卫生纸','显示器','鼠标','键盘'];
@@ -405,6 +579,164 @@
                         console.log("添加成功！");
                     }
                 })
+            },
+            depaAdd(){
+                /** 
+                 * 打开添加人模态框
+                */
+                this.depaAddData.name = '';
+                this.depaAddData.department = '';
+                this.depaAddData.email = '';
+                this.depaAddData.phone = '';
+                this.depaAddData.modal = true;
+            },
+            depaAddOk(){
+                /** 
+                 * 保存添加人员
+                */
+                if(this.depaAddData.name === ''){
+                    this.$Notice.warning({
+                        title: '请输入姓名！'
+                    });
+                    return;
+                }
+                if(this.depaAddData.department === ''){
+                    this.$Notice.warning({
+                        title: '请输入部门！'
+                    });
+                    return;
+                }
+                if(this.depaAddData.email != ''){
+                    let regEmail = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+                    if(!regEmail.test(this.depaAddData.email)){
+                        this.$Notice.warning({
+                            title: '请输入正确的邮箱！'
+                        });
+                        return;
+                    }
+                }
+                if(this.depaAddData.phone != ''){
+                    let regPhone = /^1[3|4|5|6|7|8][0-9]\d{8}$/;
+                    if(!regPhone.test(this.depaAddData.phone)){
+                        this.$Notice.warning({
+                            title: '请输入正确的手机号！'
+                        });
+                        return;
+                    }
+                }
+                this.$ajax({
+                    url: "/employees",
+                    method: 'POST',
+                    params: {
+                        name: this.depaAddData.name,
+                        departmentName: this.depaAddData.department,
+                        email: this.depaAddData.email,
+                        mobilePhone: this.depaAddData.phone
+                    }
+                }).then((res) => {
+                    if(res.data.meta.code === 200){
+                        this.$Notice.success({
+                            title: '添加成功。'
+                        });
+                        
+                        this.depaAddData.modal = false;
+                    }
+                })
+            },
+            categoryAdd(){
+                this.categoryAddData.id = '';
+                this.categoryAddData.rankActive = '1';
+                this.categoryAddData.category = '';
+                this.categoryAddData.parentId = '';
+                this.categoryAddData.modal = true;
+            },
+            categoryAddOk(){
+                /** 
+                 * 保存添加人员
+                */
+                let level = 1;
+                let parentId = 0;
+                if(this.categoryAddData.category === ''){
+                    this.$Notice.warning({
+                        title: '请输入类目名！'
+                    });
+                    return;
+                }
+                if(this.categoryAddData.rankActive === '2'){
+                    level = 2;
+                    if(this.categoryAddData.parentId === ''){
+                        this.$Notice.warning({
+                            title: '请选择父级类！'
+                        });
+                        return;
+                    }else{
+                        parentId = this.categoryAddData.parentId;
+                    }
+                }
+                this.$ajax({
+                    url: "/categorys",
+                    method: 'POST',
+                    params: {
+                        name: this.categoryAddData.category,
+                        parentId: parentId,
+                        level: level
+                    }
+                }).then((res) => {
+                    if(res.data.meta.code === 200){
+                        this.$Notice.success({
+                            title: '添加成功。'
+                        });
+                        this.categoryAddData.modal = false;
+                    }
+                })
+            
+            },
+            supplierAdd(){
+                /** 
+                 * 打开添加人模态框
+                */
+                this.supplierAddData.contact = '';
+                this.supplierAddData.supplier = '';
+                this.supplierAddData.phone = '';
+                this.supplierAddData.modal = true;
+            },
+            supplierAddOk(){
+                /** 
+                 * 保存添加人员
+                */
+                if(this.supplierAddData.supplier === ''){
+                    this.$Notice.warning({
+                        title: '请输入供应商名称！'
+                    });
+                    return;
+                }                
+                if(this.supplierAddData.phone != ''){
+                    let regPhone = /^1[3|4|5|6|7|8][0-9]\d{8}$/;
+                    if(!regPhone.test(this.supplierAddData.phone)){
+                        this.$Notice.warning({
+                            title: '请输入正确的手机号！'
+                        });
+                        return;
+                    }
+                }
+                let S = new Spell();
+                this.$ajax({
+                    url: "/suppliers",
+                    method: 'POST',
+                    params: {
+                        contacts: this.supplierAddData.contact,
+                        name: this.supplierAddData.supplier,
+                        shortName: S.ConvertPinyin(this.supplierAddData.supplier),
+                        phone: this.supplierAddData.phone
+                    }
+                }).then((res) => {
+                    if(res.data.meta.code === 200){
+                        this.$Notice.success({
+                            title: '添加成功。'
+                        });
+                        this.supplierAddData.modal = false;
+                    }
+                })
             }
         },
         watch: {
@@ -448,6 +780,17 @@
             font-size: 14px;
             font-weight: bold;
             line-height: 45px;
+            
+        }
+        .form-table-title{
+            position: relative;
+            .add{
+                position: absolute;
+                right: 0;
+                color: #3399ff;
+                font-size: 14px;
+                cursor: pointer;
+            }
         }
         .form-table-item{
             height: 45px;

@@ -222,6 +222,7 @@
             width: 100%;
             position: relative;
             padding-left: 180px;
+            background: #e7ebf0;
             .u-top-menu{
                 height: 60px;
                 background: #fff;
