@@ -12,7 +12,7 @@
                     </Col>
                     <Col span="2">
                         <div class="form-table-title">
-                            <span>支出类目</span>
+                            <span>类目</span>
                             <span class="add" @click="categoryAdd">新增+</span>
                         </div>
                     </Col>
@@ -57,13 +57,7 @@
                     </Col>
                     <Col span="2">
                         <div class="form-table-item" :class="{red:expenditure.infoRed[index].classNameValue}">
-                            <AutoComplete
-                                v-model="item.classNameValue"
-                                :data="expenditure.className"
-                                @on-search="classNameSearch"
-                                placeholder="类名"
-                            >
-                            </AutoComplete>
+                            <Input v-model="item.classNameValue" placeholder="商品名"></Input>
                         </div>
                     </Col>
                     <Col span="2">
@@ -157,10 +151,10 @@
             class-name="vertical-center-modal">
             <div class="u-modalAddData">
                 <Row>
-                     <Col span="4" v-show="categoryData.length > 0">
+                    <Col span="4" v-show="expenditure.categorys.length > 0">
                         <label>选择级别</label>
                     </Col>
-                    <Col span="18" v-show="categoryData.length > 0">
+                    <Col span="18" v-show="expenditure.categorys.length > 0">
                         <ButtonGroup>
                             <Button :class="{active: categoryAddData.rankActive === '1'}" @click="categoryAddData.rankActive = '1'">一级</Button>
                             <Button :class="{active: categoryAddData.rankActive === '2'}" @click="categoryAddData.rankActive = '2'">二级</Button>
@@ -168,19 +162,19 @@
                     </Col>
                 </Row>
                 <Row>
-                    <Col span="4">
-                        <label>类目</label>
-                    </Col>
-                    <Col span="20">
-                        <Input v-model="categoryAddData.category" placeholder="请输入类目" @on-enter="categoryAddOk"></Input>
-                    </Col>
                     <Col span="4" v-show="categoryAddData.rankActive === '2'">
                         <label>父级</label>
                     </Col>
                     <Col span="20" v-show="categoryAddData.rankActive === '2'">
                         <Select v-model="categoryAddData.parentId" filterable>
-                            <Option v-for="item in categoryData" :value="item.id" :key="item.id">{{ item.title }}</Option>
+                            <Option v-for="item in categoryData" :value="item.id" :key="item.id">{{ item.name }}</Option>
                         </Select>
+                    </Col>
+                    <Col span="4">
+                        <label>类目</label>
+                    </Col>
+                    <Col span="20">
+                        <Input v-model="categoryAddData.category" placeholder="请输入类目" @on-enter="categoryAddOk"></Input>
                     </Col>
                 </Row>
             </div>
@@ -261,17 +255,23 @@
             }
         },
         created(){
-            this.getData();
+            this.getInit();
 
             /* 获取所有部门 */
             this.getDepts();
-            this.getEmployees();
+            /* 获取所有类目 */
+            this.getCategorys();
+            /* 获取供应商 */
+            this.getSuppliers();
+            
         },
         methods: {
-            getData(){
+            getInit(){
                 /** 
                 * 初始化支出明细表单
                 **/
+                this.expenditure.info = [];
+                this.expenditure.infoRed = [];
                 for(let i=0; i<3; i++){
                     this.expenditure.info.push({
                         nameValue: [],
@@ -296,14 +296,8 @@
                         mes: false
                     })
                 }
-                /**-
-                * 获取供应商
-                * */
-                this.$ajax.get("/select/suppliers").then((res) => {
-                    if( res.data.meta.code === 200 ){
-                        this.expenditure.suppliers = res.data.data;
-                    }
-                })
+            },
+            getDepts(){
                 /**
                 * 获取部门人员
                 * */
@@ -325,9 +319,19 @@
                         }
                     }
                 })
-                /**
-                * 获取一级类目
+                /**-
+                * 获取部门列表
                 * */
+                this.$ajax.get("/select/depts").then((res) => {
+                    if( res.data.meta.code === 200 ){
+                        this.depts = res.data.data;
+                    }
+                })
+            },
+            getCategorys(){
+                /** 
+                 * 获取类目
+                */
                 this.$ajax.get("/select/categorys").then((res) => {
                     if( res.data.meta.code === 200 ){
                         this.expenditure.categorys = [];
@@ -344,45 +348,31 @@
                                 })
                             }
                         }
+                        let arr = [];
+                        for(let i=0; i<this.expenditure.categorys.length; i++){
+                            if(this.expenditure.categorys[i].children.length != 0){
+                                arr.push(this.expenditure.categorys[i]);
+                            }
+                        }
+                        this.expenditure.categorys = arr;
+                    }
+                })
+                /**-
+                * 获取一级类目
+                * */
+                this.$ajax.get("/categorys").then((res) => {
+                    if( res.data.meta.code === 200 ){
+                        this.categoryData = res.data.data;
                     }
                 })
             },
-            getDepts(){
-                /** 
-                 * 获取所有部门
-                */
-                this.$ajax.get('/depts').then((res) => {
-                    if(res.data.meta.code === 200){
-                        this.depts = res.data.data;
-                        console.log(this.depts)
-                    }
-                });
-            },
-            getCategorys(){
-                /** 
-                 * 获取类目
-                */
-                this.$ajax.get('/categorys').then((res) => {
-                    if(res.data.meta.code === 200){
-                        this.categoryData = [];
-                        for(let i=0; i<res.data.data.length; i++){
-                            this.categoryData.push({
-                                title: res.data.data[i].name,
-                                id: res.data.data[i].id,
-                                parentId: res.data.data[i].parentId,
-                                level: res.data.data[i].level,
-                                expand: true,
-                                children: []
-                            })
-                            for(let j=0; j<res.data.data[i].childrens.length; j++){
-                                this.categoryData[i].children.push({
-                                    title: res.data.data[i].childrens[j].name,
-                                    id: res.data.data[i].childrens[j].id,
-                                    parentId: res.data.data[i].childrens[j].parentId,
-                                    level: res.data.data[i].childrens[j].level
-                                })
-                            }
-                        }
+            getSuppliers(){
+                /**-
+                * 获取供应商
+                * */
+                this.$ajax.get("/select/suppliers").then((res) => {
+                    if( res.data.meta.code === 200 ){
+                        this.expenditure.suppliers = res.data.data;
                     }
                 })
             },
@@ -575,9 +565,11 @@
                         saveJson: JSON.stringify(jsonArr)
                     }
                 }).then((res) => {
-                    console.log(res)
                     if( res.data.meta.code === 200 ){
-                        console.log("添加成功！");
+                        this.$Notice.success({
+                            title: '添加成功。'
+                        });
+                        this.getInit()
                     }
                 })
             },
@@ -639,7 +631,7 @@
                         this.$Notice.success({
                             title: '添加成功。'
                         });
-                        
+                        this.getDepts();
                         this.depaAddData.modal = false;
                     }
                 })
@@ -687,6 +679,7 @@
                         this.$Notice.success({
                             title: '添加成功。'
                         });
+                        this.getCategorys();
                         this.categoryAddData.modal = false;
                     }
                 })
@@ -735,6 +728,7 @@
                         this.$Notice.success({
                             title: '添加成功。'
                         });
+                        this.getSuppliers();
                         this.supplierAddData.modal = false;
                     }
                 })

@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "init": "webpack --progress --config webpack.dev.config.js",
-    "start": "webpack-dev-server -d  --progress --host 192.168.4.246 --port 8888  --config webpack.dev.config.js",
+    "start": "webpack-dev-server -d  --progress --host 127.0.0.1 --port 8888  --config webpack.dev.config.js",
     "build": "webpack --progress --hide-modules --config webpack.prod.config.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hugangqiang/u"
+    "url": ""
   },
   "author": "",
   "license": "MIT",

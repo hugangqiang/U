@@ -41,14 +41,12 @@
                         <span>消息</span>
                     </div>
                     <div class="item">
-                        <Icon type="gear-b"></Icon>
-                        <span>设置</span>
-                    </div>
-                    <div class="item">
                         <Icon type="person"></Icon>
                         <span>{{this.$store.state.userinfo.phone}}</span>
                         <div class="u-submenu">
-                            <div class="subitem">基本资料</div>
+                            <router-link to="/sass/user/set">
+                                <div class="subitem">个人设置</div>
+                            </router-link>
                             <div class="subitem" @click="logout">退出</div>
                         </div>
                     </div>
@@ -95,14 +93,9 @@
                         children: []
                     },
                     {
-                        title: "个人中心",
+                        title: "系统管理",
                         icon: 'ios-settings-strong',
                         children: [
-                            {
-                                subtitle: '个人设置',
-                                icon: 'android-settings',
-                                href: '/sass/user/set'
-                            },
                             {
                                 subtitle: '供应商管理',
                                 icon: 'social-dribbble-outline',
@@ -114,7 +107,7 @@
                                 href: '/sass/user/department'
                             },
                             {
-                                subtitle: '类目设置',
+                                subtitle: '类目管理',
                                 icon: 'ios-compose',
                                 href: '/sass/user/category'
                             }
@@ -138,7 +131,7 @@
         },
         methods: {
             filePage(){
-                console.log('1')
+                this.$router.push({path:'/file'});
             },
             logout(){
 				/** 
@@ -149,7 +142,7 @@
                     onOk: () => {
                         this.$store.commit('SAVE_USER', {});
             			this.$delCookie("token");
-                        this.$router.push({path:'/login'});
+                        this.$router.push({path:'/'});
                     }
                 });
         	}

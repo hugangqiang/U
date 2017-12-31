@@ -174,7 +174,7 @@
                 /** 
                  * 获取所有部门
                 */
-                this.$ajax.get('/depts').then((res) => {
+                this.$ajax.get('/select/depts').then((res) => {
                     if(res.data.meta.code === 200){
                         this.depts = res.data.data;
                         for(let i=0; i<this.depts.length; i++){
