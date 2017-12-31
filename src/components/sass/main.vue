@@ -245,6 +245,7 @@
                             padding: 0 20px;
                             line-height: 40px;
                             background: #fff;
+                            color: #333;
                         }
                         .subitem:hover{
                             background: #f0f0f0;

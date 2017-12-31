@@ -5,10 +5,13 @@
             <div class="u-set-content">
                 <div class="u-user-info">
                     <div class="user-img">
-                        <div>
+                        <div v-if="userImg === ''">
                             <img src="../../images/user-img.png" alt="">
                         </div>
-                        <Button type="primary">修改头像</Button>
+                        <div v-else>
+                            <img :src="userImg" alt="">
+                        </div>
+                        <Button type="primary" @click="editUserImg">修改头像</Button>
                     </div>
                     <div class="user-group">
                         <div class="title">基本资料</div>
@@ -18,20 +21,33 @@
                                     <span class="name">公司名称</span>
                                 </Col>
                                 <Col span="14">
-                                    <span class="text">请输入您所在公司全称</span>
+                                    <div v-if="!companyNameEdit">
+                                        <span class="text" v-if="companyName === ''">请输入您所在公司全称</span>
+                                        <span class="text" v-else>{{companyName}}</span>
+                                    </div>
+                                    <div v-else style="padding-right: 30px;">
+                                        <Input type="text" v-model="companyNameTemp" @on-blur="companySave('blur')" placeholder="请输入公司名称"></Input>
+                                    </div>
                                 </Col>
                                 <Col span="5">
                                     <div class="operation">
-                                        <span class="onSet">
+                                        <span class="onSet"  v-if="companyName === ''">
                                             <Icon type="ios-information"></Icon>
                                             <span>未设置</span>
                                         </span>
-                                        <span class="yesSet">
+                                        <span class="yesSet" v-else>
                                             <Icon type="ios-checkmark"></Icon>
                                             <span>已设置</span>
                                         </span>
                                         <span class="sep">|</span>
-                                        <span>修改</span>
+                                        <span class="edit" v-if="companyName === ''" @click="companySave">
+                                            <span v-if="!companyNameEdit">添加</span>
+                                            <span v-else>保存</span>
+                                        </span>
+                                        <span class="edit" v-else  @click="companySave">
+                                            <span v-if="!companyNameEdit">修改</span>
+                                            <span v-else>保存</span>
+                                        </span>
                                     </div>
                                 </Col>
                             </Row>
@@ -42,20 +58,33 @@
                                     <span class="name">用户名</span>
                                 </Col>
                                 <Col span="14">
-                                    <span class="text">用户名是您在U行政的昵称</span>
+                                    <div v-if="!userNameEdit">
+                                        <span class="text" v-if="userName === ''">用户名是您在U行政的昵称</span>
+                                        <span class="text" v-else>{{userName}}</span>
+                                    </div>
+                                    <div v-else style="padding-right: 30px;">
+                                        <Input type="text" v-model="userNameTemp" @on-blur="userNameSave('blur')" placeholder="请输入用户名"></Input>
+                                    </div>
                                 </Col>
                                 <Col span="5">
                                     <div class="operation">
-                                        <span class="onSet">
+                                        <span class="onSet"  v-if="userName === ''">
                                             <Icon type="ios-information"></Icon>
                                             <span>未设置</span>
                                         </span>
-                                        <span class="yesSet">
+                                        <span class="yesSet" v-else>
                                             <Icon type="ios-checkmark"></Icon>
                                             <span>已设置</span>
                                         </span>
                                         <span class="sep">|</span>
-                                        <span>修改</span>
+                                        <span class="edit" v-if="userName === ''" @click="userNameSave">
+                                            <span v-if="!userNameEdit">添加</span>
+                                            <span v-else>保存</span>
+                                        </span>
+                                        <span class="edit" v-else  @click="userNameSave">
+                                            <span v-if="!userNameEdit">修改</span>
+                                            <span v-else>保存</span>
+                                        </span>
                                     </div>
                                 </Col>
                             </Row>
@@ -236,13 +265,34 @@
                     passwdcheck: [
                         { validator: validatePassCheck, trigger: 'blur' }
                     ]
-                }
+                },
+                phone: '',
+                userName: '',
+                userNameTemp: '',
+                userNameEdit: false,
+                companyName: '',
+                companyNameTemp: '',
+                companyNameEdit: false,
+                userImg: ''
             }
         },
         created(){
-            
+            this.getData()
         },
         methods: {
+            getData(){
+                this.$ajax({
+                    url: "/users",
+                    method: 'GET'
+                }).then((res) => {
+                    if(res.data.meta.code === 200){
+                        this.phone = res.data.data.phone;
+                        this.userName = res.data.data.nickname;
+                        this.companyName = res.data.data.companyName;
+                        this.userImg = res.data.data.avatarUrl;
+                    }
+                })
+            },
             editpasswordOpen(){
                 this.editPassword.modal = true;
                 this.editPassword.oldpassword = '';
@@ -281,6 +331,75 @@
                         });
                     }
                 })
+            },
+            editUserImg(){
+                let input = document.createElement('input');
+                input.type = 'file';
+                input.name = 'avatarFile';
+                input.accept = 'image/jpeg,image/png,image/jpg,image/gif';
+                input.onchange = this.onImgChange;
+                input.click();
+            },
+            onImgChange(e){
+                let fileInput = e.target;
+                let data = new FormData();
+                data.append('avatarFile',fileInput.files[0]);
+                this.$ajax({
+                    url: "/users/setting",
+                    method: 'PATCH',
+                    data: data
+                }).then((res) => {
+                    if( res.data.meta.code === 200 ) { 
+                        this.$Notice.success({
+                            title: '修改成功。'
+                        });
+                        this.getData();
+                    }
+                })
+            },
+            companySave(str = ''){
+                if(str === 'blur'){
+                    this.$ajax({
+                        url: "/users/setting",
+                        method: 'PATCH',
+                        params: {
+                            companyName: this.companyNameTemp
+                        }
+                    }).then((res) => {
+                        if(res.data.meta.code === 200){
+                            this.$Notice.success({
+                                title: '保存成功。'
+                            });
+                            this.companyNameEdit = false;
+                            this.getData();
+                        }
+                    })
+                }else{
+                    this.companyNameTemp = this.companyName;
+                    this.companyNameEdit = true;
+                }
+            },
+            userNameSave(str = ''){
+                if(str === 'blur'){
+                    this.$ajax({
+                        url: "/users/setting",
+                        method: 'PATCH',
+                        params: {
+                            nickname: this.userNameTemp
+                        }
+                    }).then((res) => {
+                        if(res.data.meta.code === 200){
+                            this.$Notice.success({
+                                title: '保存成功。'
+                            });
+                            this.userNameEdit = false;
+                            this.getData();
+                        }
+                    })
+                }else{
+                    this.userNameTemp = this.userName;
+                    this.userNameEdit = true;
+                }
             }
         }
     }

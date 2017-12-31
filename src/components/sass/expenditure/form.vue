@@ -135,6 +135,7 @@
                 type: this.finds.filter,
                 dateType: this.finds.cycle
             })
+            document.querySelector('.expenditure').style.height = document.documentElement.clientHeight - 350 + 'px';
         },
         methods: {
             init(){

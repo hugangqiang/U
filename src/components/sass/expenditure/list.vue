@@ -146,7 +146,7 @@
                     },
                     {
                         title: '部门',
-                        width: 100,
+                        width: 105,
                         key: 'departmentName'
                     },
                     {
@@ -156,12 +156,12 @@
                     },
                     {
                         title: '一级项目',
-                        width: 130,
+                        width: 135,
                         key: 'oneCategoryName'
                     },
                     {
                         title: '二级项目',
-                        width: 130,
+                        width: 135,
                         key: 'twoCategoryName'
                     },
                     {
