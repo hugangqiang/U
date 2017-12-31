@@ -9,7 +9,7 @@
                             <nav>
                                 <router-link to="/" class="menu-box">首页</router-link>
                                 <router-link to="/sass" class="menu-box">行政工具</router-link>
-                                <router-link to="/file" class="menu-box">资料下载</router-link>
+                                <!-- <router-link to="/file" class="menu-box">资料下载</router-link> -->
                             </nav>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                 <h1>U行政</h1>
                 <p>做真正懂你的行政助手</p>
                 <p>国内首家行政类服务平台</p>
-                <button class="btn">立即体验</button>
+                <button class="btn" @click="test">立即体验</button>
             </div>
         </div>
         <div class="u-content-box">
@@ -141,6 +141,28 @@
             }
         },
         methods: {
+           test(){
+                this.$ajax({
+                    url: "/login",
+                    method: "POST",
+                    params: {
+                        phone: '17521015175',
+                        password: '123123123'
+                    }
+                })
+                .then((res) => {
+                    let code = res.data.meta.code;
+                    if( code === 200 ){
+                        /*加密得到的信息token*/
+                        let token = this.$jwt.sign(res.data.data, 'u', {
+                            expiresIn: "1days"
+                        })
+                        this.$store.commit('SAVE_USER', res.data.data);
+                        this.$setCookie("token",token);
+                        this.$router.push({path:'/sass'});
+                    }
+                })
+           },
            logout(){
 				/** 
 				 * 退出登录

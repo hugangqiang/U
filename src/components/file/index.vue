@@ -13,7 +13,9 @@
                         <div class="flex-box">
                             <div class="type-img word"></div>
                             <div class="file-info">
-                                <div class="name">{{item.name}}</div>
+                                <router-link :to="'/file/list/view?id='+item.id">
+                                    <div class="name">{{item.name}}</div>
+                                </router-link>
                                 <div class="meta">
                                     <span>{{item.uploadDate}}</span>
                                     <span>{{item.downloadCount}}下载</span>
@@ -23,11 +25,14 @@
                             </div>
                             <div class="operation">
                                 <!-- <Button type="primary">下载</Button> -->
-                                <Button type="warning" class="active">收藏</Button>
-                                <Button type="warning">已收藏</Button>
+                                <Button type="warning" class="active" v-if="!item.isCollect" @click="collect(item,1)">收藏</Button>
+                                <Button type="warning" v-else  @click="collect(item,0)">已收藏</Button>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="u-file-list-pages">
+                    <Page ref="pages" :total="fileList.total" :current="1" show-sizer  show-elevator placement="top" @on-change="changePage" @on-page-size-change="changeSizePage"></Page>
                 </div>
             </div>
         </div>
@@ -39,6 +44,8 @@
             return {
                 fileList: {
                     total: 0,
+                    current: 1,
+                    pageSize: 15,
                     data: []
                 }
             }
@@ -48,14 +55,14 @@
         },
         mounted(){
             this.getData({
-                page: 1,
-                pageSize: 10
+                page: this.fileList.current,
+                pageSize: this.fileList.pageSize
             })
         },
         methods: {
-           getData(json={}){
-               this.$ajax({
-                    url: "/materials",
+            getData(json={}){
+                this.$ajax({
+                    url: "/materials/search",
                     method: "GET",
                     params: json
                 }).then((res) => {
@@ -65,7 +72,45 @@
                         console.log(this.fileList)
                     }
                 })
-           }
+            },
+            collect(item,num){
+                if(typeof this.$store.state.userinfo.phone != 'undefined'){
+                    this.$ajax({
+                        url: "/materials/collect",
+                        method: "POST",
+                        params: {
+                            id: item.id,
+                            type: num
+                        }
+                    }).then((res) => {
+                        if(res.data.meta.code === 200){
+                            if(num === 1){
+                                item.isCollect = true;
+                            }else{
+                                item.isCollect = false;
+                            }
+                            this.fileList.data.push({});
+                            this.fileList.data.pop();
+                        }
+                    })
+                }else{
+                    this.$router.push({path:'/login'});
+                }
+            },
+            changePage (current) {
+                this.fileList.current = current;
+                this.getData({
+                    page: this.fileList.current,
+                    pageSize: this.fileList.pageSize
+                })
+            },
+            changeSizePage (size){
+                this.fileList.pageSize = size;
+                this.getData({
+                    page: this.fileList.current,
+                    pageSize: this.fileList.pageSize
+                })
+            }
         }
     }
 </script>
@@ -141,6 +186,10 @@
                         }
                     }
                 }
+            }
+            .u-file-list-pages{
+                text-align: center;
+                margin: 50px 0;
             }
         }
     }

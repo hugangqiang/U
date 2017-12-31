@@ -31,29 +31,13 @@
                 <Col span="6">
                     <div class="hotDown">
                         <div class="title">本周热门下载榜</div>
-                        <div class="item"><span class="num">1</span>大法师士大夫是</div>
-                        <div class="item"><span class="num">1</span>大法师士大夫是</div>
-                        <div class="item"><span class="num">1</span>大法师士大夫是</div>
-                        <div class="item"><span class="num">1</span>大法师士大夫是</div>
-                        <div class="item"><span class="num">1</span>大法师士大夫是</div>
-                        <div class="item"><span class="num">1</span>大法师士大夫是</div>
-                        <div class="item"><span class="num">1</span>大法师士大夫是</div>
-                        <div class="item"><span class="num">1</span>大法师士大夫是</div>
-                        <div class="item"><span class="num">1</span>大法师士大夫是</div>
+                        <div class="item" v-for="(item,index) in hotDown"><span class="num">{{index+1}}</span>{{item.name}}</div>
                     </div>
                     <div class="hotTags">
                         <div class="title">热门标签</div>
                         <div class="items">
-                            <div class="item">拉拉啦</div>
-                            <div class="item">拉拉啦</div>
-                            <div class="item">拉拉啦</div>
-                            <div class="item">拉拉啦</div>
-                            <div class="item">拉拉啦</div>
-                            <div class="item">拉拉啦</div>
-                            <div class="item">拉拉啦</div>
-                            <div class="item">拉拉啦</div>
+                            <div class="item" v-for="item in hotTags" :key="item.key">{{ item.name }}</div>
                         </div>
-                        
                     </div>
                     <div class="adSass">
                         <img src="../images/adsass.png" alt="">
@@ -67,17 +51,37 @@
     export default {
         data () {
             return {
-                searchValue: ''
+                searchValue: '',
+                hotTags: [],
+                hotDown: []
             }
         },
         created(){
 
         },
         mounted(){
-            
+            this.getHotData()
         },
         methods: {
-           
+            getHotData(){
+                this.$ajax({
+                    url: "/tags/hot",
+                    method: "GET"
+                }).then((res) => {
+                    if(res.data.meta.code === 200){
+                        this.hotTags = res.data.data;
+                    }
+                })
+
+                this.$ajax({
+                    url: "/materials/hot",
+                    method: "GET"
+                }).then((res) => {
+                    if(res.data.meta.code === 200){
+                        this.hotDown = res.data.data;
+                    }
+                })
+            }
         }
     }
 </script>
@@ -155,10 +159,13 @@
                 left: 0;
             }
             .item{
-                line-height: 40px;
+                line-height: 20px;
+                padding-top: 10px;
+                padding-bottom: 10px;
                 padding-left: 25px;
                 border-bottom: 1px solid #e0e0e0;
                 color: #0096ff;
+                cursor: pointer;
                 .num{
                     color: #999;
                     margin-right: 15px;

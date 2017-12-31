@@ -36,10 +36,10 @@
             </div>
             <div class="u-layout-right">
                 <div class="u-top-menu">
-                    <div class="item">
+                  <!--   <div class="item">
                         <Icon type="ios-bell"></Icon>
                         <span>消息</span>
-                    </div>
+                    </div> -->
                     <div class="item">
                         <Icon type="person"></Icon>
                         <span>{{this.$store.state.userinfo.phone}}</span>
@@ -87,11 +87,11 @@
                             }
                         ]
                     },
-                    {
+                    /* {
                         title: "资料模板",
                         icon: 'document',
                         children: []
-                    },
+                    }, */
                     {
                         title: "系统管理",
                         icon: 'ios-settings-strong',

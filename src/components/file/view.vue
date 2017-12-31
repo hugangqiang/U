@@ -1,233 +1,96 @@
 <template>
-    <div class="u-index">
-        <div class="u-header u-height">
-            <div class="header-top">
-                <div class="layout">
-                    <div>
-                        <router-link to="/"><div class="logo"></div></router-link>
-                        <div class="menu">
-                            <nav>
-                                <router-link to="/" class="menu-box">首页</router-link>
-                                <router-link to="/sass" class="menu-box">行政工具</router-link>
-                                <router-link to="/file" class="menu-box">资料下载</router-link>
-                            </nav>
+    <div class="u-file-view">
+        <div class="file-header-info">
+            <div class="u-file-item" >
+                <div class="flex-box">
+                    <div class="type-img word"></div>
+                    <div class="file-info">
+                        <div class="name">{{fileInfo.name}}</div>
+                        <div class="meta">
+                            <span>{{fileInfo.uploadDate}}</span>
+                            <span>{{fileInfo.downloadCount}}下载</span>
+                            <span>{{fileInfo.previewCount}}预览</span>
+                            <span>Excel文档</span>
                         </div>
                     </div>
-                    <div class="btns" v-if="typeof $store.state.userinfo.phone === 'undefined'">
-                        <router-link to="/auth/register">
-                            <span class="reg-btn">注册</span>
-                        </router-link>
-                        <span class="sep"></span>
-                        <router-link to="/auth/login">
-                            <span class="login-btn">登录</span>
-                        </router-link>
-                    </div>
-                    <div class="btns" v-else>
-                        <span class="reg-btn">{{$store.state.userinfo.phone}}</span>
-                        <span class="sep"></span>
-                        <span class="login-btn" @click="logout">退出</span>
+                    <div class="operation">
+                        <!-- <Button type="primary">下载</Button> -->
+                        <!-- <Button type="warning" class="active" v-if="!fileInfo.isCollect" @click="collect(fileInfo,1)">收藏</Button>
+                        <Button type="warning" v-else  @click="collect(fileInfo,0)">已收藏</Button> -->
                     </div>
                 </div>
             </div>
         </div>
-        <router-view></router-view>
-        <div class="u-footer">
-            <div class="logo">
-                <img src="../images/logo.png" alt="">
-            </div>
-            <p>联系我们：17602192829  |  客服QQ：1031514657</p>
-            <p>沪ICP备17015887号</p>
-            <p>Copyright ©  U行政 www.uxingzheng.com  All rights reserved</p>
-        </div>
-        <BackTop></BackTop>
     </div>
 </template>
 <script>
     export default {
         data () {
             return {
-               
+                fileInfo: {}
             }
         },
         created(){
 
         },
         mounted(){
-            let _this = this;
-            let uH = document.querySelectorAll('.u-height');
-            for(let i=0; i<uH.length; i++){
-                uH[i].style.height = document.documentElement.clientHeight + 'px';
-            }
+            this.getData(this.$router.currentRoute.query.id);
         },
         methods: {
-           logout(){
-				/** 
-				 * 退出登录
-				 **/
-        		this.$store.commit('SAVE_USER', {});
-                this.$delCookie("token");
-                this.$router.push({path:'/'});
-        	}
+            getData(id){
+                this.$ajax.get("/materials/detail/"+id).then((res) => {
+                    if( res.data.meta.code === 200 ){
+                        this.fileInfo = res.data.data;
+                    }
+                })
+            }
         }
     }
 </script>
 <style lang="less">
-    .u-index{
-        .u-header{
+    .u-file-view{
+        .u-file-item{
             position: relative;
-            width: 100%;
-            background: url("../images/banner01.png");
-            background-size: cover;
-            background-repeat: no-repeat;
-            .header-top{
-                height: 60px;
-                background: rgba(0,0,0,.5);
-                .layout{
-                    display: flex;
-                    flex-flow: row nowrap;
-                    justify-content: space-between;
-                    .logo{
-                        display: inline-block;
-                        width: 120px;
-                        height: 30px;
-                        background: url("../images/logo.png");
-                        background-size: contain;
-                        background-repeat: no-repeat;
-                        margin-top: 15px;
+            .flex-box{
+                display: flex;
+                flex-direction: row;
+                padding: 20px;
+                border-bottom: 1px solid #e0e0e0;
+                .type-img{
+                    margin-right: 20px;
+                }
+                .file-info{
+                    .name{
+                        color: #4c4c4c;
+                        font-size: 16px;
+                        margin-top: 5px;
                     }
-                    .menu{
-                        display: inline-block;
-                        position: relative;
-                        top: -8px;
-                        left: 25px;
-                        .menu-box{
-                            font-size: 16px;
-                            color: #f0f0f0;
-                            margin: 0 25px;
-                        }
-                    }
-                    .btns{
-                        line-height: 60px;
-                        .login-btn,
-                        .reg-btn{
-                            color: #f0f0f0;
-                            font-size: 16px;
-                            cursor: pointer;
-                            margin: 0 15px;
-                        }
-                        .sep{
-                            width: 2px;
-                            height: 16px;
-                            background: #fff;
-                            display: inline-block;
-                            position: relative;
-                            top: 2px;
+                    .meta{
+                        font-size: 14px;
+                        color: #999;
+                        margin-top: 10px;
+                        span{
+                            margin-right: 30px;
                         }
                     }
                 }
-            }
-            .banner-text{
-                position: absolute;
-                right: 10%;
-                top: 50%;
-                margin-top: -155px;
-                height: 310px;
-                color: #fff;
-                h1{
-                    font-size: 48px;
-                    line-height: 80px;
-                }
-                p{
-                    font-size: 34px;
-                    line-height: 65px;
-                }
-                .btn{
-                    height: 68px;
-                    width: 195px;
-                    padding: 0;
-                    border: 1px solid #fff;
-                    border-radius: 5px;
-                    line-height: 68px;
-                    font-size: 30px;
-                    background: rgba(0,0,0,0);
-                    color: #fff;
-                    margin-top: 30px;
-                    cursor: pointer;
-                }
-            }
-        }
-        .u-content-box{
-            background: #fff;
-            padding: 120px 0;
-            .u-content-text{
-                h3{
-                    font-size: 34px;
-                    color: #333;
-                    margin-top: 30px;
-                }
-                p{
-                    color: #999;
-                    font-size: 24px;
-                    line-height: 43px;
-                }
-            }
-            .u-content-img{
-                img{
-                    max-width: 100%;
-                }
-            }
-        }
-        .u-content-box:nth-of-type(3){
-            background: #f0f0f0;
-        }
-        .u-content-more{
-            background: url("../images/content-img04.png");
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: cover;
-            position: relative;
-            .u-content-text{
-                text-align: center;
-                width: 100%;
-                height: 150px;
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                h3{
-                    display: inline-block;
-                    font-size: 85px;
-                    color: #fff;
-                }
-                .text{
-                    display: inline-block;
-                    span{
-                        display: block;
-                        font-size: 30px;
-                        line-height: 37px;
-                        color: #fff;
-                        text-align: left;
+                .operation{
+                    position: absolute;
+                    right: 20px;
+                    top: 34px;
+                    .ivu-btn{
+                        padding: 0;
+                        width: 80px;
+                        height: 32px;
+                    }
+                    .ivu-btn.active{
+                        background: #fff;
+                        border: 2px solid #f90;
+                        color: #f90;
+                        font-weight: bold;
                     }
                 }
             }
-        }
-        .u-footer{
-            width: 100%;
-            height: 450px;
-            background: #202023;
-            text-align: center;
-            padding: 70px 0 50px;
-            .logo{
-                margin-bottom: 60px;
-            }
-            p{
-                font-size: 20px;
-                line-height: 45px;
-                color: #fff;
-            }
-        }
-        .ivu-back-top-inner {
-            background-color: #0e9939;
         }
     }
-    
 </style>

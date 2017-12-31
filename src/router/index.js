@@ -118,7 +118,7 @@ const routers = [
         //依赖部分
         component: resolve => require(['../components/sass/main.vue'], resolve),
         //默认跳转
-        redirect: '/sass/index',
+        redirect: '/sass/expenditure/form',
         //以下部分为主页的子模块
         children: [
             {

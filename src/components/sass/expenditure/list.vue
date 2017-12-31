@@ -155,12 +155,12 @@
                         key: 'employeeName'
                     },
                     {
-                        title: '一级项目',
+                        title: '大类目',
                         width: 135,
                         key: 'oneCategoryName'
                     },
                     {
-                        title: '二级项目',
+                        title: '小类目',
                         width: 135,
                         key: 'twoCategoryName'
                     },

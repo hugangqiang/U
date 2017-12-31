@@ -24,6 +24,24 @@
                 </Col>
             </Row>
         </Card>
+        <Modal
+            v-model="formInfo.modal"
+            title="统计详情"
+            width="950"
+            :styles="{zIndex: '999999'}"
+            class-name="vertical-center-modal">
+            <div class="u-modalAddData">
+                <Table stripe :columns="formInfo.formInfoTitle" :data="formInfo.formInfoData.rows"></Table>
+            </div>
+            <div slot="footer">
+                <div class="pages-show"  v-show="formInfo.formInfoData.total > 10">
+                    <Page ref="pages" :total="formInfo.formInfoData.total" :current="1" show-sizer  show-elevator placement="top" @on-change="changePage" @on-page-size-change="changeSizePage"></Page>
+                </div>
+                <div class="formInfototal">
+                    <span>合计费用：￥<span class="num">{{formInfo.formInfoData.totalAmount}}</span></span>
+                </div>
+            </div>
+        </Modal>
     </div>
 </template>
 <script>
@@ -80,6 +98,49 @@
                     ]
                 },
                 total: 0,
+                list: [],
+                formInfo: {
+                    modal: false,
+                    id: null,
+                    formInfoTitle: [
+                        {
+                            type: 'index',
+                            width: 50,
+                            align: 'center'
+                        },
+                        {
+                            title: '部门',
+                            key: 'departmentName'
+                        },
+                        {
+                            title: '人员',
+                            key: 'employeeName'
+                        },
+                        {
+                            title: '大类目',
+                            key: 'oneCategoryName'
+                        },
+                        {
+                            title: '小类目',
+                            key: 'twoCategoryName'
+                        },
+                        {
+                            title: '金额',
+                            key: 'totalAmount'
+                        },
+                        {
+                            title: '时间',
+                            key: 'expenditureDate'
+                        }
+                    ],
+                    formInfoData: {
+                        current: 1,
+                        pageSize: 10,
+                        totalAmount: 0,
+                        total: 0,
+                        rows: []
+                    }
+                },
                 config: {
                     color: ['#3398DB'],
                     tooltip : {
@@ -99,6 +160,7 @@
                         {
                             type : 'category',
                             data : [],
+                            ids: [],
                             axisTick: {
                                 alignWithLabel: true
                             }
@@ -142,8 +204,10 @@
                 // 基于准备好的dom，初始化echarts实例
                 let expenditure = this.$echarts.init(document.querySelector('.expenditure'));
                 expenditure.setOption(this.config);
+                let _this = this;
                 expenditure.on('click', function (params) {
-                    console.log(params)
+                    _this.formInfo.id = _this.list[params.dataIndex].id;
+                    _this.getInfo()
                 });
             },
             getData(json = {}){
@@ -157,6 +221,7 @@
                         this.total = this.total.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                         let arr = [];
                         let arr1 = [];
+                        this.list = res.data.data.list;
                         for(let i=0; i<res.data.data.list.length; i++){
                             arr.push(res.data.data.list[i].name)
                             arr1.push(res.data.data.list[i].amount)
@@ -164,6 +229,40 @@
                         this.config.xAxis[0].data = arr;
                         this.config.series[0].data = arr1;
                         this.init();
+                    }
+                })
+            },
+            getInfo(){
+                let json = {};
+                let date = null;
+                function getDate(str){
+                    let date = new Date(str);
+                    function p(s) {
+                        return s < 10 ? '0' + s: s;
+                    }
+                    return date.getFullYear() + '-' + p((date.getMonth() + 1)) + '-' + p(date.getDate()); 
+                }
+                if(this.finds.cycle === ''){
+                    json.startDate = getDate(this.finds.date[0]);
+                    json.endDate = getDate(this.finds.date[0]);
+                }else{
+                    json.dateType = this.finds.cycle;
+                }
+                json.type = this.finds.filter;
+                json.entityId = this.formInfo.id;
+                json.page = this.formInfo.formInfoData.current;
+                json.pageSize = this.formInfo.formInfoData.pageSize;
+                this.$ajax({
+                    url: "/report/detail",
+                    method: "GET",
+                    params: json
+                }).then((res) => {
+                    if(res.data.meta.code === 200){
+                        this.formInfo.formInfoData.totalAmount = res.data.data.totalAmount.toFixed(2);
+                        this.formInfo.formInfoData.totalAmount = this.formInfo.formInfoData.totalAmount.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                        this.formInfo.formInfoData.rows = res.data.data.page.rows;
+                        this.formInfo.formInfoData.total = res.data.data.page.total;
+                        this.formInfo.modal = true;
                     }
                 })
             },
@@ -236,7 +335,7 @@
                 }else{
                     json.dateType = this.finds.cycle;
                 }
-                json.entityId = this.finds.filter;
+                json.type = this.finds.filter;
                 this.$ajax({
                     url: "/report/export",
                     method: "GET",
@@ -244,6 +343,14 @@
                 }).then((res) => {
                     window.open(res.config.url+'?'+buildUri(res.config.params),'_blank');
                 })
+            },
+            changePage (current) {
+                this.formInfo.formInfoData.current = current;
+                this.getInfo();
+            },
+            changeSizePage (size){
+                this.formInfo.formInfoData.pageSize = size;
+                this.getInfo();
             }
         }
     }
@@ -267,4 +374,19 @@
             height: 300px;
         }
     }
+    .ivu-modal-footer{
+        min-height: 60px;
+        .pages-show{
+            text-align: left;
+            float: left;
+        }
+    }
+    .formInfototal{
+        font-size: 14px;
+        float: right;
+        .num{
+            color: red;
+            font-size: 25px;
+        }
+    } 
 </style>
