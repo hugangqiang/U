@@ -302,7 +302,7 @@
                 * 获取部门人员
                 * */
                 this.$ajax.get("/select/dept-employees").then((res) => {
-                    if( res.data.meta.code === 200 ){
+                    if( res.data.meta.code === 200 && typeof res.data.data != 'undefined'){
                         this.expenditure.names = [];
                         for(let i=0; i<res.data.data.length; i++){
                             this.expenditure.names.push({
@@ -323,7 +323,7 @@
                 * 获取部门列表
                 * */
                 this.$ajax.get("/select/depts").then((res) => {
-                    if( res.data.meta.code === 200 ){
+                    if( res.data.meta.code === 200 && typeof res.data.data != 'undefined'){
                         this.depts = res.data.data;
                     }
                 })
@@ -333,7 +333,7 @@
                  * 获取类目
                 */
                 this.$ajax.get("/select/categorys").then((res) => {
-                    if( res.data.meta.code === 200 ){
+                    if( res.data.meta.code === 200 && typeof res.data.data != 'undefined'){
                         this.expenditure.categorys = [];
                         for(let i=0; i<res.data.data.length; i++){
                             this.expenditure.categorys.push({
@@ -361,7 +361,7 @@
                 * 获取一级类目
                 * */
                 this.$ajax.get("/categorys").then((res) => {
-                    if( res.data.meta.code === 200 ){
+                    if( res.data.meta.code === 200 && typeof res.data.data != 'undefined'){
                         this.categoryData = res.data.data;
                     }
                 })
@@ -371,7 +371,7 @@
                 * 获取供应商
                 * */
                 this.$ajax.get("/select/suppliers").then((res) => {
-                    if( res.data.meta.code === 200 ){
+                    if( res.data.meta.code === 200 && typeof res.data.data != 'undefined'){
                         this.expenditure.suppliers = res.data.data;
                     }
                 })

@@ -56,12 +56,29 @@
                 </div>
             </div>
         </div>
+        <Modal
+            v-model="companyName.modal"
+            title="请填写公司名称"
+            :closable="false"
+            :mask-closable="false"
+            class-name="vertical-center-modal">
+            <div class="u-modalAddData">
+                <Input v-model="companyName.name" placeholder="请填写公司名称" @on-enter="companyNameOk"></Input>
+            </div>
+            <div slot="footer">
+                <Button type="primary" @click="companyNameOk">保存</Button>
+            </div>
+        </Modal>
     </div>
 </template>
 <script>
     export default {
         data () {
             return {
+                companyName: {
+                    modal: false,
+                    name: ''
+                },
                 menuActive: false,
                 activeName: '',
                 openName: [1,2,3],
@@ -86,8 +103,8 @@
                                 href: '/sass/expenditure/form'
                             }
                         ]
-                    },
-                    /* {
+                    },/* 
+                    {
                         title: "资料模板",
                         icon: 'document',
                         children: []
@@ -128,10 +145,47 @@
         },
         mounted(){
             document.querySelector('.u-body').style.height = document.documentElement.clientHeight - 60 + 'px';
+
+            this.init();
         },
         methods: {
+            init(){
+                this.$ajax({
+                    url: "/users",
+                    method: 'GET'
+                }).then((res) => {
+                    if(res.data.meta.code === 200){
+                        this.companyName.name = res.data.data.companyName;
+                        if(this.companyName.name === ''){
+                            this.companyName.modal = true;
+                        }   
+                    }
+                })
+            },
             filePage(){
                 this.$router.push({path:'/file'});
+            },
+            companyNameOk(){
+                if(this.companyName.name === ''){
+                    this.$Notice.error({
+                        title: '请填写公司名称！'
+                    });
+                    return;
+                }
+                this.$ajax({
+                    url: "/users/setting",
+                    method: 'PATCH',
+                    params: {
+                        companyName: this.companyName.name
+                    }
+                }).then((res) => {
+                    if(res.data.meta.code === 200){
+                        this.$Notice.success({
+                            title: '保存成功。'
+                        });
+                        this.companyName.modal = false;
+                    }
+                })
             },
             logout(){
 				/** 
@@ -172,7 +226,7 @@
             }
             .u-toggle-menu{
                 height: 35px;
-                background: #333f50;
+                background: #3a4758;
                 color: hsla(0,0%,100%,.7);
                 text-align: center;
                 cursor: pointer;

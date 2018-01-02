@@ -38,12 +38,24 @@
         },
         methods: {
             getData(id){
-                this.$ajax.get("/materials/detail/"+id).then((res) => {
+                this.$ajax({
+                    url: "/materials/detail",
+                    method: "GET",
+                    params: {
+                        id: id
+                    }
+                }).then((res) => {
                     if( res.data.meta.code === 200 ){
                         this.fileInfo = res.data.data;
                     }
                 })
+            },
+            watchRoute(){
+                this.getData(this.$router.currentRoute.query.id);
             }
+        },
+        watch: {
+            '$route': 'watchRoute'
         }
     }
 </script>

@@ -31,7 +31,11 @@
                 <Col span="6">
                     <div class="hotDown">
                         <div class="title">本周热门下载榜</div>
-                        <div class="item" v-for="(item,index) in hotDown"><span class="num">{{index+1}}</span>{{item.name}}</div>
+                        <div class="item" v-for="(item,index) in hotDown">
+                            <router-link :to="'/file/list/view?id='+item.id">
+                                <span class="num">{{index+1}}</span>{{item.name}}
+                            </router-link>
+                        </div>
                     </div>
                     <div class="hotTags">
                         <div class="title">热门标签</div>

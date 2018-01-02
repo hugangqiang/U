@@ -359,6 +359,12 @@
             },
             companySave(str = ''){
                 if(str === 'blur'){
+                    if( this.companyNameTemp === '' ) { 
+                        this.$Notice.error({
+                            title: '请输入国家！'
+                        });
+                        return;
+                    }
                     this.$ajax({
                         url: "/users/setting",
                         method: 'PATCH',

@@ -311,9 +311,8 @@
                  * 获取类目
                 */
                 this.$ajax.get("/select/categorys").then((res) => {
-                    if( res.data.meta.code === 200 ){
+                    if( res.data.meta.code === 200 && typeof res.data.data != 'undefined'){
                         this.finds.classData = res.data.data;
-
                         this.expenditureEditData.categorys = [];
                         for(let i=0; i<res.data.data.length; i++){
                             this.expenditureEditData.categorys.push({
@@ -335,7 +334,6 @@
                             }
                         }
                         this.expenditureEditData.categorys = arr;
-
                     }
                 })
                
@@ -343,7 +341,7 @@
                 * 获取供应商
                 * */
                 this.$ajax.get("/select/suppliers").then((res) => {
-                    if( res.data.meta.code === 200 ){
+                    if( res.data.meta.code === 200 && typeof res.data.data != 'undefined'){
                         this.finds.suppliersData = res.data.data;
                         this.expenditureEditData.suppliers = res.data.data;
                     }
@@ -352,7 +350,7 @@
                 * 获取部门人员
                 * */
                 this.$ajax.get("/select/dept-employees").then((res) => {
-                    if( res.data.meta.code === 200 ){
+                    if( res.data.meta.code === 200 && typeof res.data.data != 'undefined'){
                         this.finds.deptsEmployeesData = res.data.data;
 
                         this.expenditureEditData.names = [];

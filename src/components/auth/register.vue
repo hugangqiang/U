@@ -89,6 +89,9 @@
         methods: {
             registerSubmit(name) {
                 this.$refs[name].validate((valid) => {
+                    if(!this.formInlineregister.check){
+                        return;
+                    }
                     if (valid) {
                         let _this = this;
                         _this.$ajax({
@@ -116,7 +119,26 @@
                                 });
                             }else if( code === 200 ){
                                 /*加密得到的信息token*/
-                                _this.loginName = 'name1';
+                                _this.$ajax({
+                                    url: "/login",
+                                    method: "POST",
+                                    params: {
+                                        phone: _this.$refs.formInlineregister.$options.propsData.model.phone,
+                                        password: _this.$refs.formInlineregister.$options.propsData.model.password
+                                    }
+                                })
+                                .then((res) => {
+                                    let code = res.data.meta.code;
+                                    if( code === 200 ){
+                                        /*加密得到的信息token*/
+                                        let token = _this.$jwt.sign(res.data.data, 'u', {
+                                            expiresIn: "1days"
+                                        })
+                                        _this.$store.commit('SAVE_USER', res.data.data);
+                                        _this.$setCookie("token",token);
+                                        _this.$router.push({path:'/'});
+                                    }
+                                })
                             }
                         })
                     } else {
@@ -160,12 +182,11 @@
                         url: "/code/register",
                         method: "GET",
                         params: {
-                            phone: this.formInlineregister.phone
+                            phone: _this.formInlineregister.phone
                         }
                     }).then((res) => {
-                        console.log(res)
                         if(res.data.meta.code === 452 ){
-                            this.$Notice.error({
+                            _this.$Notice.error({
                                 title: '手机号已注册！'
                             });
                             _this.formInlineregister.onCode = true;
