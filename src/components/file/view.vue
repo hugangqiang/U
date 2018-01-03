@@ -93,7 +93,7 @@
                 })
             },
             download(){
-                if(typeof this.$store.state.userinfo.phone != 'undefined'){
+                if(typeof this.$store.state.userinfo.phone != 'undefined'  && this.$store.state.userinfo.phone != '18888888888'){
                     this.$ajax({
                         url: "/materials/download",
                         method: "GET",
@@ -114,11 +114,13 @@
                         }
                     })
                 }else{
+                    this.$store.commit('SAVE_USER', {});
+                    this.$delCookie("token");
                     this.$router.push({path:'/auth/login'});
                 }
             },
             collect(num){
-                if(typeof this.$store.state.userinfo.phone != 'undefined'){
+                if(typeof this.$store.state.userinfo.phone != 'undefined' && this.$store.state.userinfo.phone != '18888888888'){
                     this.$ajax({
                         url: "/materials/collect",
                         method: "POST",
@@ -136,6 +138,8 @@
                         }
                     })
                 }else{
+                    this.$store.commit('SAVE_USER', {});
+                    this.$delCookie("token");
                     this.$router.push({path:'/auth/login'});
                 }
             },

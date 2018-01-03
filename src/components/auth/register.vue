@@ -27,7 +27,9 @@
                 </Form-item>
                 <Form-item>
                     <Checkbox v-model="formInlineregister.check">我已阅读并且同意 </Checkbox>
-                    <span>《服务协议》</span>
+                    <router-link to="/protocol">
+                        <span>《服务协议》</span>
+                    </router-link>
                 </Form-item>
                 <Form-item>
                     <Button type="primary" :disabled="!formInlineregister.check" class="btn-login" @click="registerSubmit('formInlineregister')">注册</Button>
@@ -58,7 +60,7 @@
                     verifyPhotoCode: '',
                     onCode: true,
                     password: '',
-                    check: false
+                    check: true
                 },
                 ruleInlineregister: {
                     phone: [

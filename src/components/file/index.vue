@@ -39,7 +39,7 @@
                         </div>
                     </div>
                     <div class="u-file-item nullData" v-show="fileList.data.length === 0 && !loadList">
-                        暂无文件，急需需要请联系QQ：1031514657
+                        暂无文件，可联系客服进行进行免费下载  QQ：1031514657
                     </div>
                 </div>
                 <div class="u-file-list-pages" v-show="fileList.total>15">
@@ -101,7 +101,7 @@
                 })
             },
             collect(item,num){
-                if(typeof this.$store.state.userinfo.phone != 'undefined'){
+                if(typeof this.$store.state.userinfo.phone != 'undefined' && this.$store.state.userinfo.phone != '18888888888'){
                     this.$ajax({
                         url: "/materials/collect",
                         method: "POST",
@@ -121,6 +121,8 @@
                         }
                     })
                 }else{
+                    this.$store.commit('SAVE_USER', {});
+                    this.$delCookie("token");
                     this.$router.push({path:'/auth/login'});
                 }
             },

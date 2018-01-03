@@ -71,8 +71,8 @@
                         </div>
                     </Col>
                     <Col span="3">
-                        <div class="form-table-item">
-                            <InputNumber :min="0" v-model="item.total" :precision="2"></InputNumber>
+                        <div class="form-table-item"  :class="{red:expenditure.infoRed[index].total}">
+                            <InputNumber :min="0" v-model="item.total" ></InputNumber>
                         </div>
                     </Col>
                     <Col span="3">
@@ -513,14 +513,14 @@
                             this.expenditure.infoRed[i].classNameValue = false;
                         }
 
-                        if(this.expenditure.info[i].price === 0){
-                            this.expenditure.infoRed[i].price = true;
+                        if(this.expenditure.info[i].total === 0){
+                            this.expenditure.infoRed[i].total = true;
                             this.$Notice.warning({
-                                title: '请填写价格！'
+                                title: '请填写金额！'
                             });
                             return;break;
                         }else{
-                            this.expenditure.infoRed[i].price = false;
+                            this.expenditure.infoRed[i].total = false;
                         }
 
                         if(this.expenditure.info[i].date === ''){

@@ -8,6 +8,15 @@ const routers = [
         component: resolve => require(['../components/home/index.vue'], resolve)
     },
     {
+        path: '/protocol',
+        meta: {
+            title: '用户协议',
+            requireAuth: true,
+            isAuth: true
+        },
+        component: resolve => require(['../components/home/protocol.vue'], resolve)
+    },
+    {
         path: '/auth',
         meta: {
             title: '登录',
@@ -25,6 +34,15 @@ const routers = [
                     isAuth: true
                 },
                 component: resolve => require(['../components/auth/login.vue'], resolve)
+            },
+            {
+                path: 'register',
+                meta: {
+                    title: '注册',
+                    requireAuth: true,
+                    isAuth: true
+                },
+                component: resolve => require(['../components/auth/register.vue'], resolve)
             },
             {
                 path: 'register',
