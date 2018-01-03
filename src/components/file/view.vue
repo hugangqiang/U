@@ -31,9 +31,9 @@
             </div>
             <div class="u-file-view-info">
                 <Carousel dots="none" arrow="always">
-                    <CarouselItem>
+                    <CarouselItem v-for="item in fileInfo.bigPics" :key="item.id">
                         <div class="demo-carousel">
-                            <img src="http://doc.uxingzheng.com/mtl/b/6538c2bb9f508c92d28aea413de7c38eacea4843.jpg" alt="">
+                            <img :src="item" alt="">
                         </div>
                     </CarouselItem>
                 </Carousel>
