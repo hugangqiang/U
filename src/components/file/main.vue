@@ -23,7 +23,8 @@
                         </router-link>
                     </div>
                     <div class="btns" v-else>
-                        <span class="reg-btn">{{$store.state.userinfo.phone}}</span>
+                        <span class="reg-btn" v-if="$store.state.userinfo.nickname === ''">{{$store.state.userinfo.phone}}</span>
+                        <span class="reg-btn" v-else>{{$store.state.userinfo.nickname}}</span>
                         <span class="sep"></span>
                         <span class="login-btn" @click="logout">退出</span>
                     </div>

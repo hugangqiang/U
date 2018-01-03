@@ -29,6 +29,7 @@
     export default {
         data () {
             const validatePhone = (rule, value, callback) => {
+                value = value.replace(/(^\s*)|(\s*$)/g, "");
                 let reg = /^1[3|4|5|6|7|8][0-9]\d{8}$/;
                 if (value === '') {
                     callback(new Error('请输入手机号！'));

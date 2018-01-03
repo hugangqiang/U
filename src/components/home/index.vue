@@ -8,8 +8,8 @@
                         <div class="menu">
                             <nav>
                                 <router-link to="/" class="menu-box">首页</router-link>
-                                <router-link to="/sass" class="menu-box">行政工具</router-link><!-- 
-                                <router-link to="/file" class="menu-box">资料下载</router-link> -->
+                                <router-link to="/sass" class="menu-box">行政工具</router-link> 
+                                <router-link to="/file" class="menu-box">资料下载</router-link>
                             </nav>
                         </div>
                     </div>
@@ -24,7 +24,10 @@
                         </router-link>
                     </div>
                     <div class="btns" v-else>
-                        <span class="reg-btn">{{$store.state.userinfo.phone}}</span>
+                        <span class="reg-btn">
+                            <span v-if="$store.state.userinfo.nickname === ''">{{$store.state.userinfo.phone}}</span>
+                            <span v-else>{{$store.state.userinfo.nickname}}</span>
+                        </span>
                         <span class="sep"></span>
                         <span class="login-btn" @click="logout">退出</span>
                     </div>
@@ -34,7 +37,7 @@
                 <h1>U行政</h1>
                 <p>做真正懂你的行政助手</p>
                 <p>国内首家行政类服务平台</p>
-                <button class="btn" @click="test">立即体验</button>
+                <button v-if="typeof $store.state.userinfo.phone === 'undefined'" class="btn" @click="test">立即体验</button>
             </div>
         </div>
         <div class="u-content-box">
@@ -43,7 +46,7 @@
                     <Col span="10">
                         <div class="u-content-text">
                             <h3>新增支出</h3>
-                            <p>添加公司支出，省去excel表哥</p>
+                            <p>添加公司支出，省去excel表格</p>
                             <p>记账不再麻烦</p>
                             <h3>精确记录</h3>
                             <p>精确记录部门及个人支出</p>
@@ -72,7 +75,7 @@
                         <div class="u-content-text">
                             <h3>统计中心</h3>
                             <p>“按支出项”、“按部门”，“按个人”</p>
-                            <p>多维度查看统计数据/p>
+                            <p>多维度查看统计数据</p>
                             <h3>时间灵活</h3>
                             <p>可分别按自由的时间段、及固定时间周期</p>
                             <p>查询支出统计</p>
@@ -146,8 +149,8 @@
                     url: "/login",
                     method: "POST",
                     params: {
-                        phone: '17521015175',
-                        password: '123123123'
+                        phone: '18888888888',
+                        password: '11111111'
                     }
                 })
                 .then((res) => {
@@ -179,7 +182,7 @@
         .u-header{
             position: relative;
             width: 100%;
-            background: url("../images/banner01.png");
+            background: url("../images/banner01.jpg");
             background-size: cover;
             background-repeat: no-repeat;
             .header-top{

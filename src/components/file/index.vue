@@ -2,16 +2,20 @@
     <div class="u-file-index">
         <div class="u-header">
             <div class="filter">
-                <div class="filter-box active">综合排序</div>
-                <div class="filter-box">下载<Icon type="arrow-down-a"></Icon></div>
-                <div class="filter-box">收藏<Icon type="arrow-down-a"></Icon></div>
-                <div class="filter-box">最新<Icon type="arrow-down-a"></Icon></div>
+                <div class="filter-box" :class="{active: sortActive === ''}" @click="sort('')">综合排序</div>
+                <div class="filter-box" :class="{active: sortActive === 'download'}" @click="sort('download')">下载<Icon type="arrow-down-a"></Icon></div>
+                <div class="filter-box" :class="{active: sortActive === 'collect'}" @click="sort('collect')">预览<Icon type="arrow-down-a"></Icon></div>
+                <div class="filter-box" :class="{active: sortActive === 'new'}" @click="sort('new')">最新<Icon type="arrow-down-a"></Icon></div>
             </div>
             <div class="u-file-content">
                 <div class="u-file-list">
                     <div class="u-file-item" v-for="(item,index) in fileList.data" :key="item.id" >
                         <div class="flex-box">
-                            <div class="type-img word"></div>
+                            <div class="type-img excel" v-if="item.fileSuffix === 'xlsx' || item.fileSuffix === 'xls'"></div>
+                            <div class="type-img word" v-if="item.fileSuffix === 'docx' || item.fileSuffix === 'doc' || item.fileSuffix === 'wpt'|| item.fileSuffix === 'wps' || item.fileSuffix === 'dotx'"></div>
+                            <div class="type-img ppt" v-if="item.fileSuffix === 'pptx' || item.fileSuffix === 'ppt'"></div>
+                            <div class="type-img pdf" v-if="item.fileSuffix === 'pdf'"></div>
+                            <div class="type-img other" v-if="item.fileSuffix === ''"></div>
                             <div class="file-info">
                                 <router-link :to="'/file/list/view?id='+item.id">
                                     <div class="name">{{item.name}}</div>
@@ -20,7 +24,11 @@
                                     <span>{{item.uploadDate}}</span>
                                     <span>{{item.downloadCount}}下载</span>
                                     <span>{{item.previewCount}}预览</span>
-                                    <span>Excel文档</span>
+                                    <span v-if="item.fileSuffix === 'xlsx' || item.fileSuffix === 'xls'">Excel文档</span>
+                                    <span v-if="item.fileSuffix === 'docx' || item.fileSuffix === 'doc' || item.fileSuffix === 'wpt'|| item.fileSuffix === 'wps' || item.fileSuffix === 'dotx'">Word文档</span>
+                                    <span v-if="item.fileSuffix === 'pptx' || item.fileSuffix === 'ppt'">PTT文档</span>
+                                    <span v-if="item.fileSuffix === 'pdf'">PDF文档</span>
+                                    <span v-if="item.fileSuffix === ''">其他文档</span>
                                 </div>
                             </div>
                             <div class="operation">
@@ -30,24 +38,36 @@
                             </div>
                         </div>
                     </div>
+                    <div class="u-file-item nullData" v-show="fileList.data.length === 0 && !loadList">
+                        暂无文件，急需需要请联系QQ：1031514657
+                    </div>
                 </div>
-                <div class="u-file-list-pages">
+                <div class="u-file-list-pages" v-show="fileList.total>15">
                     <Page ref="pages" :total="fileList.total" :current="1" show-sizer  show-elevator placement="top" @on-change="changePage" @on-page-size-change="changeSizePage"></Page>
                 </div>
             </div>
         </div>
+        <Spin class="loadlist" fix v-show="loadList">
+            <div class="loader">
+                <svg class="circular" viewBox="25 25 50 50">
+                    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"></circle>
+                </svg>
+            </div>
+        </Spin>
     </div>
 </template>
 <script>
     export default {
         data () {
             return {
+                loadList: false,
                 fileList: {
                     total: 0,
                     current: 1,
                     pageSize: 15,
                     data: []
-                }
+                },
+                sortActive: ''
             }
         },
         created(){
@@ -60,16 +80,23 @@
             })
         },
         methods: {
-            getData(json={}){
+            getData(json={},load=true){
+                if(load){
+                    this.fileList.data = [];
+                    this.fileList.total = 0;
+                    this.loadList = true;
+                }
                 this.$ajax({
                     url: "/materials/search",
                     method: "GET",
                     params: json
                 }).then((res) => {
                     if(res.data.meta.code === 200){
+                        if(load){
+                            this.loadList = false;
+                        }
                         this.fileList.data = res.data.data.rows;
                         this.fileList.total = res.data.data.total;
-                        console.log(this.fileList)
                     }
                 })
             },
@@ -94,27 +121,93 @@
                         }
                     })
                 }else{
-                    this.$router.push({path:'/login'});
+                    this.$router.push({path:'/auth/login'});
                 }
             },
             changePage (current) {
                 this.fileList.current = current;
-                this.getData({
-                    page: this.fileList.current,
-                    pageSize: this.fileList.pageSize
-                })
+                let json = {};
+                if(typeof this.$router.currentRoute.query.s != 'undefined'){
+                    json.keyword = this.$router.currentRoute.query.s;
+                }
+                if(typeof this.$router.currentRoute.query.tag != 'undefined'){
+                    json.tagId = this.$router.currentRoute.query.tag;
+                }
+                if(typeof this.$router.currentRoute.query.mytype != 'undefined'){
+                    json.searchType = this.$router.currentRoute.query.mytype;
+                }
+                json.page = this.fileList.current;
+                json.pageSize = this.fileList.pageSize;
+
+                this.getData(json,false)
             },
             changeSizePage (size){
                 this.fileList.pageSize = size;
-                this.getData({
-                    page: this.fileList.current,
-                    pageSize: this.fileList.pageSize
+                let json = {};
+                if(typeof this.$router.currentRoute.query.s != 'undefined'){
+                    json.keyword = this.$router.currentRoute.query.s;
+                }
+                if(typeof this.$router.currentRoute.query.tag != 'undefined'){
+                    json.tagId = this.$router.currentRoute.query.tag;
+                }
+                if(typeof this.$router.currentRoute.query.mytype != 'undefined'){
+                    json.searchType = this.$router.currentRoute.query.mytype;
+                }
+                json.page = this.fileList.current;
+                json.pageSize = this.fileList.pageSize;
+                this.getData(json,false)
+            },
+            sort(str=''){
+                this.sortActive = str;
+                let json= {};
+                if(typeof this.$router.currentRoute.query.s != 'undefined'){
+                    json.keyword = this.$router.currentRoute.query.s;
+                }
+                if(typeof this.$router.currentRoute.query.mytype != 'undefined'){
+                    json.searchType = this.$router.currentRoute.query.mytype;
+                }
+                if(typeof this.$router.currentRoute.query.tag != 'undefined'){
+                    json.tagId = this.$router.currentRoute.query.tag;
+                }
+                if(str != ''){
+                    json.sortField = str;
+                }
+                json.page = 1;
+                json.pageSize = this.fileList.pageSize;
+                
+                this.getData(json);
+                this.$nextTick(function(){
+                    this.$refs['pages'].currentPage = 1;
+                })
+            },
+            watchRoute(){
+                let json = {};
+                if(typeof this.$router.currentRoute.query.s != 'undefined'){
+                    json.keyword = this.$router.currentRoute.query.s;
+                }
+                if(typeof this.$router.currentRoute.query.tag != 'undefined'){
+                    json.tagId = this.$router.currentRoute.query.tag;
+                }
+                if(typeof this.$router.currentRoute.query.mytype != 'undefined'){
+                    json.searchType = this.$router.currentRoute.query.mytype;
+                }
+                json.page = 1;
+                json.pageSize = this.fileList.pageSize;
+                this.getData(json);
+                this.$nextTick(function(){
+                    this.$refs['pages'].currentPage = 1;
                 })
             }
+        },
+        watch: {
+            '$route': 'watchRoute'
         }
     }
 </script>
 <style lang="less">
+    .loadlist{
+        min-height: 300px;
+    }
     .u-file-index{
         .u-header{
             .filter{
@@ -185,6 +278,12 @@
                             }
                         }
                     }
+                }
+                .nullData{
+                    text-align: center;
+                    line-height: 50px;
+                    font-size: 16px;
+                    margin-top: 30px;
                 }
             }
             .u-file-list-pages{

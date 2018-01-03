@@ -12,6 +12,7 @@ import main from './components/main.vue';
 
 import jwt from 'jsonwebtoken';
 import echarts from 'echarts';
+import clipboard from 'clipboard';
 import 'iview/dist/styles/iview.css';
 import './components/style/common.css';
 
@@ -25,6 +26,8 @@ Vue.prototype.$ajax = Util.ajax;
 Vue.prototype.$jwt = jwt;
 /*echarts绑定到vue原型*/
 Vue.prototype.$echarts = echarts;
+/*文字复制绑定到vue原型*/
+Vue.prototype.$copy = clipboard;
 
 /*设置获取cookie绑定到vue原型*/
 function getCookie(name){

@@ -37,6 +37,7 @@
     export default {
         data () {
             const validatePhone = (rule, value, callback) => {
+                value = value.replace(/(^\s*)|(\s*$)/g, "");
                 let reg = /^1[3|4|5|6|7|8][0-9]\d{8}$/;
                 if (value === '') {
                     callback(new Error('请输入手机号！'));
@@ -87,8 +88,8 @@
                     if (valid) {
                         let _this = this;
                         _this.$ajax({
-                            url: "/findpassword",
-                            method: "POST",
+                            url: "/find/pwd",
+                            method: "PATCH",
                             params: {
                                 phone: _this.$refs.formInlinefindpassword.$options.propsData.model.phone,
                                 code: _this.$refs.formInlinefindpassword.$options.propsData.model.verifyCode,
@@ -99,19 +100,22 @@
                             let code = res.data.meta.code;
                             if( code === 452 ){
                                 _this.$Notice.error({
-                                    title: '手机号已注册！'
+                                    title: '手机号不存在!'
                                 });
                             }else if( code === 453 ){
                                 _this.$Notice.error({
-                                    title: '验证码错误！'
+                                    title: '验证码错误!'
                                 });
                             }else if( code === 454 ){
                                 _this.$Notice.error({
-                                    title: '验证码过期！'
+                                    title: '验证码已过期！'
                                 });
                             }else if( code === 200 ){
                                 /*加密得到的信息token*/
-                                _this.loginName = 'name1';
+                                _this.$Notice.success({
+                                    title: '修改成功。'
+                                });
+                                _this.$router.push({path:'/auth/login'});
                             }
                         })
                     } else {

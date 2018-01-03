@@ -166,7 +166,7 @@
                     },
                     {
                         title: '商品名',
-                        width: 120,
+                        width: 130,
                         key: 'costName'
                     },
                     {

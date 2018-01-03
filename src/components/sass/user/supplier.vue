@@ -187,7 +187,8 @@
                         title: '请输入供应商名称！'
                     });
                     return;
-                }                
+                }      
+                this.supplierAddData.phone = this.supplierAddData.phone.replace(/(^\s*)|(\s*$)/g, "");          
                 if(this.supplierAddData.phone != ''){
                     let regPhone = /^1[3|4|5|6|7|8][0-9]\d{8}$/;
                     if(!regPhone.test(this.supplierAddData.phone)){

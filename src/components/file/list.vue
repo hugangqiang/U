@@ -2,22 +2,23 @@
     <div class="layout">
         <div class="u-file-list">
             <div class="u-file-btns">
-                <Button type="primary">上传</Button>
-                <Button type="warning">我的上传</Button>
-                <Button type="success">我的收藏</Button>
+                <!-- <Button type="primary">上传</Button> -->
+                <!-- <router-link to="/file/list/index?mytype=1">
+                    <Button type="warning">我的上传</Button>
+                </router-link> -->
+                <Button type="success" @click="mytype(2)">我的收藏</Button>
             </div>
             <div class="u-file-search">
                 <Row>
                     <Col span="18">
                         <div class="center">
-                            <Input  v-model="searchValue" placeholder="请输入搜索关键字">
-                                <Button slot="append">搜索</Button>
+                            <Input  v-model="searchValue" placeholder="请输入搜索关键字" @on-enter="search">
+                                <Button slot="append" @click="search">搜索</Button>
                             </Input>
                             <div class="hotTag">
-                                <span>莎莎</span>
-                                <span>水果和阿</span>
-                                <span>水果和</span>
-                                <span>水果和阿斯蒂芬</span>
+                                <router-link v-for="item in searchHotTag" :key="item.id" :to="'/file/list/index?s='+item">
+                                    <span>{{item}}</span>
+                                </router-link>
                             </div>
                         </div>
                     </Col>
@@ -40,7 +41,9 @@
                     <div class="hotTags">
                         <div class="title">热门标签</div>
                         <div class="items">
-                            <div class="item" v-for="item in hotTags" :key="item.key">{{ item.name }}</div>
+                            <router-link v-for="item in hotTags" :key="item.key" :to="'/file/list/index?tag='+item.id">
+                                <div class="item">{{ item.name }}</div>
+                            </router-link>
                         </div>
                     </div>
                     <div class="adSass">
@@ -56,6 +59,7 @@
         data () {
             return {
                 searchValue: '',
+                searchHotTag: ['车辆管理','物品领用','工作计划表','年度总结','转正申请','放假通知'],
                 hotTags: [],
                 hotDown: []
             }
@@ -65,6 +69,7 @@
         },
         mounted(){
             this.getHotData()
+            
         },
         methods: {
             getHotData(){
@@ -85,7 +90,29 @@
                         this.hotDown = res.data.data;
                     }
                 })
+            },
+            search(){
+                this.searchValue = this.searchValue.replace(/(^\s*)|(\s*$)/g, "");
+                if(this.searchValue != ''){
+                    this.$router.push({path:'/file/list/index?s=' + this.searchValue});
+                }
+                
+            },
+            mytype(num){
+                if(typeof this.$store.state.userinfo.phone === 'undefined'){
+                    this.$router.push({path:'/auth/login'});
+                }else{
+                    this.$router.push({path:'/file/list/index?mytype=' + num});
+                }
+            },
+            watchRoute(){
+                if(typeof this.$router.currentRoute.query.s != 'undefined'){
+                    this.searchValue = this.$router.currentRoute.query.s;
+                }
             }
+        },
+        watch: {
+            '$route': 'watchRoute'
         }
     }
 </script>
@@ -218,6 +245,7 @@
             padding-left: 50px;
             text-align: center;
             margin-top: 50px;
+            margin-bottom: 100px;
         }
     }
 </style>

@@ -222,6 +222,7 @@
                     });
                     return;
                 }
+                this.depaAddData.email = this.depaAddData.email.replace(/(^\s*)|(\s*$)/g, "");
                 if(this.depaAddData.email != ''){
                     let regEmail = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
                     if(!regEmail.test(this.depaAddData.email)){
@@ -231,6 +232,7 @@
                         return;
                     }
                 }
+                this.depaAddData.phone = this.depaAddData.phone.replace(/(^\s*)|(\s*$)/g, "");
                 if(this.depaAddData.phone != ''){
                     let regPhone = /^1[3|4|5|6|7|8][0-9]\d{8}$/;
                     if(!regPhone.test(this.depaAddData.phone)){

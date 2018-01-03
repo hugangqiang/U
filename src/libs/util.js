@@ -12,7 +12,7 @@ util.title = function(title) {
 
 
 if( env === 'development' ){
-
+    //config.ajaxUrl = 'http://api-test.uxingzheng.com';
 }else if(env === 'production' ){
 
 }

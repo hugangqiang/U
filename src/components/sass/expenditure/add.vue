@@ -151,10 +151,10 @@
             class-name="vertical-center-modal">
             <div class="u-modalAddData">
                 <Row>
-                    <Col span="4" v-show="expenditure.categorys.length > 0">
+                    <Col span="4" v-show="categoryData.length > 0">
                         <label>选择级别</label>
                     </Col>
-                    <Col span="18" v-show="expenditure.categorys.length > 0">
+                    <Col span="18" v-show="categoryData.length > 0">
                         <ButtonGroup>
                             <Button :class="{active: categoryAddData.rankActive === '1'}" @click="categoryAddData.rankActive = '1'">一级</Button>
                             <Button :class="{active: categoryAddData.rankActive === '2'}" @click="categoryAddData.rankActive = '2'">二级</Button>
@@ -587,6 +587,7 @@
                 /** 
                  * 保存添加人员
                 */
+
                 if(this.depaAddData.name === ''){
                     this.$Notice.warning({
                         title: '请输入姓名！'
@@ -599,6 +600,8 @@
                     });
                     return;
                 }
+                //去空格
+                this.depaAddData.email = this.depaAddData.email.replace(/(^\s*)|(\s*$)/g, "");
                 if(this.depaAddData.email != ''){
                     let regEmail = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
                     if(!regEmail.test(this.depaAddData.email)){
@@ -608,6 +611,8 @@
                         return;
                     }
                 }
+                //去空格
+                this.depaAddData.phone = this.depaAddData.phone.replace(/(^\s*)|(\s*$)/g, "");
                 if(this.depaAddData.phone != ''){
                     let regPhone = /^1[3|4|5|6|7|8][0-9]\d{8}$/;
                     if(!regPhone.test(this.depaAddData.phone)){
@@ -703,7 +708,8 @@
                         title: '请输入供应商名称！'
                     });
                     return;
-                }                
+                } 
+                this.supplierAddData.phone = this.supplierAddData.phone.replace(/(^\s*)|(\s*$)/g, "");         
                 if(this.supplierAddData.phone != ''){
                     let regPhone = /^1[3|4|5|6|7|8][0-9]\d{8}$/;
                     if(!regPhone.test(this.supplierAddData.phone)){

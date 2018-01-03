@@ -8,8 +8,8 @@
                         <div class="menu">
                             <nav>
                                 <router-link to="/" class="menu-box">首页</router-link>
-                                <router-link to="/sass" class="menu-box">行政工具</router-link><!-- 
-                                <router-link to="/file" class="menu-box">资料下载</router-link> -->
+                                <router-link to="/sass" class="menu-box">行政工具</router-link>
+                                <router-link to="/file" class="menu-box">资料下载</router-link>
                             </nav>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
             position: relative;
             width: 100%;
             height: 100%;
-            background: url("../images/banner02.png");
+            background: url("../images/banner02.jpg");
             background-size: cover;
             background-repeat: no-repeat;
             .header-top{

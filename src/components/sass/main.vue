@@ -42,7 +42,8 @@
                     </div> -->
                     <div class="item">
                         <Icon type="person"></Icon>
-                        <span>{{this.$store.state.userinfo.phone}}</span>
+                        <span v-if="$store.state.userinfo.nickname === ''">{{$store.state.userinfo.phone}}</span>
+                        <span v-else>{{$store.state.userinfo.nickname}}</span>
                         <div class="u-submenu">
                             <router-link to="/sass/user/set">
                                 <div class="subitem">个人设置</div>
@@ -103,12 +104,12 @@
                                 href: '/sass/expenditure/form'
                             }
                         ]
-                    },/* 
+                    },
                     {
                         title: "资料模板",
                         icon: 'document',
                         children: []
-                    }, */
+                    },
                     {
                         title: "系统管理",
                         icon: 'ios-settings-strong',
@@ -281,6 +282,7 @@
                 .item{
                     line-height: 60px;
                     color: #333;
+                    min-width: 130px;
                     font-size: 16px;
                     padding: 0 20px;
                     cursor: pointer;

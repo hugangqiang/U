@@ -76,7 +76,7 @@
         .u-header{
             position: relative;
             width: 100%;
-            background: url("../images/banner01.png");
+            background: url("../images/banner01.jpg");
             background-size: cover;
             background-repeat: no-repeat;
             .header-top{
