@@ -287,7 +287,7 @@
             background: #f0f0f0;
         }
         .u-content-more{
-            background: url("../images/content-img04.png");
+            background: url("../images/content-img04.jpg");
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-size: cover;

@@ -156,60 +156,7 @@
                 }
             }
         }
-        .u-content-box{
-            background: #fff;
-            padding: 120px 0;
-            .u-content-text{
-                h3{
-                    font-size: 34px;
-                    color: #333;
-                    margin-top: 30px;
-                }
-                p{
-                    color: #999;
-                    font-size: 24px;
-                    line-height: 43px;
-                }
-            }
-            .u-content-img{
-                img{
-                    max-width: 100%;
-                }
-            }
-        }
-        .u-content-box:nth-of-type(3){
-            background: #f0f0f0;
-        }
-        .u-content-more{
-            background: url("../images/content-img04.png");
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: cover;
-            position: relative;
-            .u-content-text{
-                text-align: center;
-                width: 100%;
-                height: 150px;
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                h3{
-                    display: inline-block;
-                    font-size: 85px;
-                    color: #fff;
-                }
-                .text{
-                    display: inline-block;
-                    span{
-                        display: block;
-                        font-size: 30px;
-                        line-height: 37px;
-                        color: #fff;
-                        text-align: left;
-                    }
-                }
-            }
-        }
+    
         .u-footer{
             width: 100%;
             height: 450px;
