@@ -190,14 +190,14 @@
                         key: 'supplierName'
                     },
                     {
-                        title: '备注',
-                        width: 350,
-                        key: 'remarks'
-                    },
-                    {
                         title: '时间',
                         width: 150,
                         key: 'expenditureDate'
+                    },
+                    {
+                        title: '备注',
+                        width: 350,
+                        key: 'remarks'
                     },
                     {
                         title: '操作',
@@ -285,7 +285,7 @@
                 }
             }
         },
-        created(){
+        mounted(){
             this.getData({
                 page: this.expenditure.current,
                 pageSize: this.expenditure.pageSize

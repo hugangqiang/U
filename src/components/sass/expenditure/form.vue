@@ -272,12 +272,6 @@
                     dateType: this.finds.cycle
                 })
             },
-            changeFind(){
-                this.getData({
-                    type: this.finds.filter,
-                    dateType: this.finds.cycle
-                })
-            },
             changeFindCycle(){
                 this.finds.date = [];
                 this.getData({

@@ -254,7 +254,7 @@
                 categoryData: []
             }
         },
-        created(){
+        mounted(){
             this.getInit();
 
             /* 获取所有部门 */
@@ -264,6 +264,10 @@
             /* 获取供应商 */
             this.getSuppliers();
             
+            let expenditureStr = localStorage.getItem('expenditure');
+            if(expenditureStr){
+                this.expenditure = JSON.parse(expenditureStr);
+            }
         },
         methods: {
             getInit(){
@@ -743,6 +747,7 @@
         watch: {
             expenditure: {
                 handler: function (val, oldVal) {
+                    
                     let sum = 0;
                     for(let i=0; i<this.expenditure.info.length; i++){
                         sum += this.expenditure.info[i].total;
@@ -751,6 +756,9 @@
                         sum = sum.toFixed(2);
                     }
                     this.expenditure.total = sum;
+
+                    let sstr = JSON.stringify(this.expenditure);
+                    localStorage.setItem('expenditure', sstr);
                 },
                 deep: true
             }
