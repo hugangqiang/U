@@ -234,7 +234,7 @@
                 }
                 this.depaAddData.phone = this.depaAddData.phone.replace(/(^\s*)|(\s*$)/g, "");
                 if(this.depaAddData.phone != ''){
-                    let regPhone = /^1[3|4|5|6|7|8][0-9]\d{8}$/;
+                    let regPhone = /^1[2|3|4|5|6|7|8|9][0-9]\d{8}$/;
                     if(!regPhone.test(this.depaAddData.phone)){
                         this.$Notice.warning({
                             title: '请输入正确的手机号！'
