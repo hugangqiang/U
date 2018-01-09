@@ -591,7 +591,6 @@
                 /** 
                  * 保存添加人员
                 */
-
                 if(this.depaAddData.name === ''){
                     this.$Notice.warning({
                         title: '请输入姓名！'
