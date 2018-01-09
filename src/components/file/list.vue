@@ -68,8 +68,8 @@
 
         },
         mounted(){
-            this.getHotData()
-            
+            this.getHotData();
+            this.watchRoute();
         },
         methods: {
             getHotData(){
@@ -95,6 +95,8 @@
                 this.searchValue = this.searchValue.replace(/(^\s*)|(\s*$)/g, "");
                 if(this.searchValue != ''){
                     this.$router.push({path:'/file/list/index?s=' + this.searchValue});
+                }else{
+                    this.$router.push({path:'/file/list/index'});
                 }
                 
             },
@@ -193,13 +195,16 @@
                 line-height: 20px;
                 padding-top: 10px;
                 padding-bottom: 10px;
-                padding-left: 25px;
+                padding-left: 45px;
                 border-bottom: 1px solid #e0e0e0;
                 color: #0096ff;
                 cursor: pointer;
+                position: relative;
                 .num{
                     color: #999;
-                    margin-right: 15px;
+                    position: absolute;
+                    left: 25px;
+                    top: 10px;
                 }
             }
         }

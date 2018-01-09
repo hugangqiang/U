@@ -28,11 +28,16 @@ export default{
         this.$ajax.interceptors.request.use(
             config => {
                 // 判断是否存在token，如果存在的话，则每个请求都加上token
+                let reg = new RegExp(config.baseURL,"g");
+                let url = config.url.replace(reg,"");
+                
                 if (this.$store.state.userinfo.accessToken) {
-                    if( typeof config.params === "undefined" ){
-                        config.params = {}
+                    if(url != '/tags/hot' && url != '/materials/hot'){
+                         if( typeof config.params === "undefined" ){
+                            config.params = {}
+                        }
+                        config.params.access_token = this.$store.state.userinfo.accessToken;
                     }
-                    config.params.access_token = this.$store.state.userinfo.accessToken;
                 }
                 return config;
             },
@@ -48,15 +53,45 @@ export default{
             },
             error => {
                 if (error.response) {
+                    let reg = new RegExp(error.response.config.baseURL,"g");
+                    let url = error.response.config.url.replace(reg,"");
+                    delete error.response.config.params.access_token;
+
                     switch (error.response.status) {
                         case 401:
-                            // 返回 401 清除token信息并跳转到登录页面
-                            console.log("token已经过期");
+                            this.$store.commit('SAVE_USER', {});
+                            this.$delCookie("token")
+                            if(url === '/materials/search'){
+                                this.$ajax({
+                                    url: "/materials/search",
+                                    method: "GET",
+                                    params: error.response.config.params
+                                }).then((res) => {
+                                    if(res.data.meta.code === 200){
+                                        this.$store.commit('SAVE_File', res.data.data.rows)
+                                    }
+                                })
+                                return;
+                            }
+                            this.async();
                     }
                 }
                 return Promise.reject(error)   // 返回接口返回的错误信息
             }
         );
+    },
+    methods: {
+        async () {
+            this.$Modal.error({
+                title: '超时',
+                content: '<h3>登录超时，请重新登录！</h3>',
+                loading: true,
+                onOk: () => {
+                    this.$Modal.remove();
+                    this.$router.push({path:'/login'});
+                }
+            });
+        }
     }
 }
 </script>

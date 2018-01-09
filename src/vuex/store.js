@@ -5,15 +5,15 @@ Vue.use(Vuex)
 
 let state = {
     userinfo: {},
-    totalData: [],
+    fileList: [],
 };
 const mutations = {
     SAVE_USER(state, info) {
     	state.userinfo = info;
   	},
-  	SAVE_TOTAl(state,data){
-  		state.totalData = data;
-  	}
+  	SAVE_File(state,data){
+  		state.fileList = data;
+    }
 }
 
 

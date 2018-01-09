@@ -11,24 +11,20 @@
                 <div class="u-file-list">
                     <div class="u-file-item" v-for="(item,index) in fileList.data" :key="item.id" >
                         <div class="flex-box">
-                            <div class="type-img excel" v-if="item.fileSuffix === 'xlsx' || item.fileSuffix === 'xls'"></div>
+                            <div class="type-img excel" v-if="item.fileSuffix === 'xlsx' || item.fileSuffix === 'xls' || item.fileSuffix === 'ett' || item.fileSuffix === 'xlsm'"></div>
                             <div class="type-img word" v-if="item.fileSuffix === 'docx' || item.fileSuffix === 'doc' || item.fileSuffix === 'wpt'|| item.fileSuffix === 'wps' || item.fileSuffix === 'dotx'"></div>
-                            <div class="type-img ppt" v-if="item.fileSuffix === 'pptx' || item.fileSuffix === 'ppt'"></div>
+                            <div class="type-img ppt" v-if="item.fileSuffix === 'pptx' || item.fileSuffix === 'ppt' || item.fileSuffix === 'dpt'"></div>
                             <div class="type-img pdf" v-if="item.fileSuffix === 'pdf'"></div>
                             <div class="type-img other" v-if="item.fileSuffix === ''"></div>
                             <div class="file-info">
                                 <router-link :to="'/file/list/view?id='+item.id">
-                                    <div class="name">{{item.name}}</div>
+                                    <div class="name">{{item.name | strLangth(40)}}</div>
                                 </router-link>
                                 <div class="meta">
                                     <span>{{item.uploadDate}}</span>
                                     <span>{{item.downloadCount}}下载</span>
                                     <span>{{item.previewCount}}预览</span>
-                                    <span v-if="item.fileSuffix === 'xlsx' || item.fileSuffix === 'xls'">Excel文档</span>
-                                    <span v-if="item.fileSuffix === 'docx' || item.fileSuffix === 'doc' || item.fileSuffix === 'wpt'|| item.fileSuffix === 'wps' || item.fileSuffix === 'dotx'">Word文档</span>
-                                    <span v-if="item.fileSuffix === 'pptx' || item.fileSuffix === 'ppt'">PTT文档</span>
-                                    <span v-if="item.fileSuffix === 'pdf'">PDF文档</span>
-                                    <span v-if="item.fileSuffix === ''">其他文档</span>
+                                    <span>{{item.fileSuffix}}文档</span>
                                 </div>
                             </div>
                             <div class="operation">
@@ -74,10 +70,11 @@
 
         },
         mounted(){
-            this.getData({
-                page: this.fileList.current,
-                pageSize: this.fileList.pageSize
-            })
+            if(this.$store.state.fileList.length != 0){
+                
+            }
+            this.watchRoute();
+            
         },
         methods: {
             getData(json={},load=true){
@@ -95,7 +92,8 @@
                         if(load){
                             this.loadList = false;
                         }
-                        this.fileList.data = res.data.data.rows;
+                        this.$store.commit('SAVE_File', res.data.data.rows)
+                        this.fileList.data = this.$store.state.fileList;
                         this.fileList.total = res.data.data.total;
                     }
                 })
@@ -203,6 +201,18 @@
         },
         watch: {
             '$route': 'watchRoute'
+        },
+        filters: {
+            strLangth(value,max) {
+                /** 
+                 * 文字长度超出过滤器
+                */
+                if(value.length < max){
+                    return value;
+                }else{
+                    return value.substring(0,max) + '...';
+                }
+            }
         }
     }
 </script>

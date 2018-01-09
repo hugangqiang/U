@@ -3,9 +3,9 @@
         <div class="file-header-info">
             <div class="u-file-item" >
                 <div class="flex-box">
-                    <div class="type-img excel" v-if="fileInfo.fileSuffix === 'xlsx' || fileInfo.fileSuffix === 'xls'"></div>
+                    <div class="type-img excel" v-if="fileInfo.fileSuffix === 'xlsx' || fileInfo.fileSuffix === 'xls' || fileInfo.fileSuffix === 'ett'|| fileInfo.fileSuffix === 'xlsm'"></div>
                     <div class="type-img word"  v-if="fileInfo.fileSuffix === 'docx' || fileInfo.fileSuffix === 'doc' || fileInfo.fileSuffix === 'wpt'|| fileInfo.fileSuffix === 'wps' || fileInfo.fileSuffix === 'dotx'"></div>
-                    <div class="type-img ppt" v-if="fileInfo.fileSuffix === 'pptx' || fileInfo.fileSuffix === 'ppt'"></div>
+                    <div class="type-img ppt" v-if="fileInfo.fileSuffix === 'pptx' || fileInfo.fileSuffix === 'ppt'|| fileInfo.fileSuffix === 'dpt'"></div>
                     <div class="type-img pdf" v-if="fileInfo.fileSuffix === 'pdf'"></div>
                     <div class="type-img other" v-if="fileInfo.fileSuffix === ''"></div>
                     <div class="file-info">
@@ -14,11 +14,7 @@
                             <span>{{fileInfo.uploadDate}}</span>
                             <span>{{fileInfo.downloadCount}}下载</span>
                             <span>{{fileInfo.previewCount}}预览</span>
-                            <span v-if="fileInfo.fileSuffix === 'xlsx' || fileInfo.fileSuffix === 'xls'">Excel文档</span>
-                            <span v-if="fileInfo.fileSuffix === 'docx' || fileInfo.fileSuffix === 'doc'">Word文档</span>
-                            <span v-if="fileInfo.fileSuffix === 'pptx' || fileInfo.fileSuffix === 'ppt'">PTT文档</span>
-                            <span v-if="fileInfo.fileSuffix === 'pdf'">PDF文档</span>
-                            <span v-if="fileInfo.fileSuffix === ''">其他文档</span>
+                            <span>{{fileInfo.fileSuffix}}文档</span>
                         </div>
                     </div>
                     <div class="operation">

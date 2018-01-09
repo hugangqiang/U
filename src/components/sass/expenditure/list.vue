@@ -37,8 +37,13 @@
                     <div class="pages-show"  v-show="expenditure.total > 10">
                         <Page ref="pages" :total="expenditure.total" :current="1" show-sizer  show-elevator placement="top" @on-change="changePage" @on-page-size-change="changeSizePage"></Page>
                     </div>
-                    <div class="export">
+                    <div class="right">
                         <Button type="success" @click.native="exportExcel">导出Excel</Button>
+                    </div>
+                    <div class="right">
+                        <div class="total">
+                            合计费用：￥<span class="num">{{expenditure.totalAmount}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -240,6 +245,7 @@
                     current: 1,
                     pageSize: 10,
                     total: 0,
+                    totalAmount: 0,
                     rows: []
                 },
                 expenditureEditData: {
@@ -301,6 +307,7 @@
                 }).then((res) => {
                     if(res.data.meta.code === 200){
                         this.expenditure.total = res.data.data.total;
+                        this.expenditure.totalAmount = res.data.data.totalAmount;
                         this.expenditure.rows = res.data.data.rows;
                     }
                 })
@@ -595,7 +602,10 @@
                     method: "GET",
                     params: json
                 }).then((res) => {
-                    window.open(res.config.url+'?'+buildUri(res.config.params),'_blank');
+                    let a = document.createElement('a');
+                    a.href= res.config.url+'?'+buildUri(res.config.params);
+                    a.download = '';
+                    a.click();
                 })
             }
         }
@@ -614,8 +624,16 @@
         .pages-show{
             display: inline-block;
         }
-        .export{
+        .right{
             float: right;
+            .total{
+                line-height: 38px;
+                margin-right: 20px;
+                .num{
+                    color: red;
+                    font-size: 30px;
+                }
+            }
         }
     }
     .u-modalAddData.edit{

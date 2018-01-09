@@ -51,8 +51,35 @@
                 </Row>
             </div>
             <div slot="footer">
+                <Button type="primary" @click="importDepa">批量导入</Button>
                 <Button type="primary" @click="depaAddOk">保存</Button>
             </div>
+        </Modal>
+        <Modal
+            v-model="importDepadata.modal"
+            title="批量导入"
+            class-name="vertical-center-modal importExceldata">
+            <div class="u-modalAddData">
+                <Row>
+                    <Col span="12">
+                        <Button type="primary" @click="importDepaDown">模板下载</Button>
+                    </Col>
+                    <Col span="12">
+                        <Button type="primary" @click="importDepaUp">导入上传</Button>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span="24">
+                        <div class="importHelp">您可通过模板下载，根据模提示一次录入贵公司的人员；完成后导入上传您的文件，可实现新增支出的批量导入。</div>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span="24">
+                        <div class="importHelp" style="color: red;">{{importDepadata.error}}</div>
+                    </Col>
+                </Row>
+            </div>
+            <div slot="footer"></div>
         </Modal>
     </div>
 </template>
@@ -60,6 +87,10 @@
     export default {
         data () {
             return {
+                importDepadata: {
+                    modal: false,
+                    error: ''
+                },
                 depaAddData: {
                     modal: false,
                     isEdit: false,
@@ -354,10 +385,81 @@
                     page: this.current,
                     pageSize: this.pageSize
                 })
+            },
+            importDepa(){
+                this.importDepadata.modal = true;
+                this.depaAddData.modal = false;
+            },
+            importDepaDown(){
+                function buildUri(obj){
+                    var uri = '';
+                    for(var index in obj){
+                        if(isEmpty(obj[index])){
+                        uri +=( index + '=' + obj[index] + '&');
+                        }else{
+                        uri += buildUri(obj[index]);
+                        }
+                    }
+                    return uri;
+                }
+                function isEmpty(obj){
+                    if(typeof obj == 'string' ) return true;
+                    for(var i in obj){
+                        return false;
+                    }
+                    return true;
+                }
+                this.$ajax({
+                    url: "/employees/download/template",
+                    method: 'GET'
+                }).then((res) => {
+                    let a = document.createElement('a');
+                    a.href= res.config.url+'?'+buildUri(res.config.params);
+                    a.download = '';
+                    a.click();
+                })
+            },
+            importDepaUp(){
+                let input = document.createElement('input');
+                input.type = 'file';
+                input.name = 'importFile';
+                input.onchange = this.onDepaChange;
+                input.click();
+            },
+            onDepaChange(e){
+                let fileInput = e.target;
+                let data = new FormData();
+                data.append('importFile',fileInput.files[0]);
+                this.$ajax({
+                    url: "/employees/import",
+                    method: 'POST',
+                    data: data
+                }).then((res) => {
+                    if( res.data.meta.code === 452 ) { 
+                        this.importDepadata.error = res.data.meta.msg;
+                    } else if( res.data.meta.code === 200 ) { 
+                        this.importDepadata.error = '';
+                        this.$Notice.success({
+                            title: '导入成功！'
+                        });
+                        this.getData();
+                        this.importDepadata.modal = false;
+                    }
+                })
             }
         }
     }
 </script>
 <style lang="less">
-
+    .importExceldata{
+        .ivu-modal-footer{
+            display: none;
+        }
+        .ivu-col-span-12{
+            text-align: center;
+        }
+        .importHelp{
+            padding: 20px 80px 0;
+        }   
+    }
 </style>

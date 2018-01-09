@@ -16,6 +16,7 @@ const routers = [
         },
         component: resolve => require(['../components/home/protocol.vue'], resolve)
     },
+
     {
         path: '/auth',
         meta: {
