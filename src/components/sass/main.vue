@@ -196,6 +196,7 @@
                     content: '<h2>是否退出系统？</h2>',
                     onOk: () => {
                         this.$store.commit('SAVE_USER', {});
+                        localStorage.removeItem('expenditure');
             			this.$delCookie("token");
                         this.$router.push({path:'/'});
                     }

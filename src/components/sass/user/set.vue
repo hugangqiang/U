@@ -320,6 +320,7 @@
                                 });
                                 this.editPassword.modal = false;
                                 this.$store.commit('SAVE_USER', {});
+                                localStorage.removeItem('expenditure');
                                 this.$delCookie("token");
                                 this.$router.push({path:'/login'});
                                 
@@ -361,7 +362,7 @@
                 if(str === 'blur'){
                     if( this.companyNameTemp === '' ) { 
                         this.$Notice.error({
-                            title: '请输入国家！'
+                            title: '请输入公司名称！'
                         });
                         return;
                     }

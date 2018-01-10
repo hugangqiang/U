@@ -120,6 +120,7 @@
                     })
                 }else{
                     this.$store.commit('SAVE_USER', {});
+                    localStorage.removeItem('expenditure');
                     this.$delCookie("token");
                     this.$router.push({path:'/auth/login'});
                 }

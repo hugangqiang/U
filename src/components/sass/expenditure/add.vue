@@ -16,7 +16,7 @@
                     <Col span="2">
                         <div class="form-table-title">
                             <span>类目</span>
-                            <span class="add" @click="categoryAdd">新增+</span>
+                            <span class="add" @click="categoryAddData = true">新增+</span>
                         </div>
                     </Col>
                     <Col span="2">
@@ -150,40 +150,65 @@
             </div>
         </Modal>
         <Modal
-            v-model="categoryAddData.modal"
+            v-model="categoryAddData"
             title="新增类目/修改类目"
+            :width="700"
+            class-name="vertical-center-modal">
+            <div class="u-category-content">
+                <div class="u-category-one">
+                    <div class="header">
+                        <div class="name">
+                            <span>大类目</span>
+                            <div class="add"  @click="categoryAddTwo(1,'请输入大类目')"><Icon type="plus-circled"></Icon></div>
+                        </div>
+                    </div>
+                    <div class="u-category-con">
+                        <div class="content-item" v-for="(item,index) in categoryData" :key="item.id" :class="{active: item === categoryActive}" @click="categoryActive = item">
+                            <div class="text" v-show="!item.show">{{item.name}}</div>
+                            <div class="edit" v-show="item.show" >
+                                <Input type="text" v-model="item.editValue"></Input>
+                            </div>
+                            <div class="operation" v-show="item === categoryActive">
+                                <Button type="primary" size="small" v-if="!item.show" @click.native="categoryEditTodo(item)">修改</Button>
+                                <Button type="primary" size="small" v-else @click.native="categoryEditSaveTodo(item)">保存</Button>
+                                <Button type="error" size="small" @click.native="categoryDelTodo(item,index)">删除</Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="u-category-two">
+                    <div class="header">
+                        <div class="name">
+                            <span>小类目</span>
+                            <div class="add" @click="categoryAddTwo(2,'请输入小类目')"><Icon type="plus-circled"></Icon></div>
+                        </div>
+                    </div>
+                    <div class="u-category-con">
+                        <div class="content-item" v-for="(item,index) in categoryActive.childrens" :key="item.id" >
+                            <div class="text" v-if="!item.show">{{item.name}}</div>
+                            <div class="edit" v-else>
+                                <Input type="text" v-model="item.editValue"></Input>
+                            </div>
+                            <div class="operation" >
+                                <Button type="primary" size="small" v-if="!item.show" @click.native="categoryEditTodo(item)">修改</Button>
+                                <Button type="primary" size="small" v-else @click.native="categoryEditSaveTodo(item)">保存</Button>
+                                <Button type="error" size="small" @click.native="categoryDelTodo(item,index)">删除</Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div slot="footer"></div>
+        </Modal>
+        <Modal
+            v-model="categoryAddDataTwo.modal"
+            title="添加类目"
             class-name="vertical-center-modal">
             <div class="u-modalAddData">
-                <Row>
-                    <Col span="4" v-show="categoryData.length > 0">
-                        <label>选择级别</label>
-                    </Col>
-                    <Col span="18" v-show="categoryData.length > 0">
-                        <ButtonGroup>
-                            <Button :class="{active: categoryAddData.rankActive === '1'}" @click="categoryAddData.rankActive = '1'">一级</Button>
-                            <Button :class="{active: categoryAddData.rankActive === '2'}" @click="categoryAddData.rankActive = '2'">二级</Button>
-                        </ButtonGroup>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span="4" v-show="categoryAddData.rankActive === '2'">
-                        <label>父级</label>
-                    </Col>
-                    <Col span="20" v-show="categoryAddData.rankActive === '2'">
-                        <Select v-model="categoryAddData.parentId" filterable>
-                            <Option v-for="item in categoryData" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                        </Select>
-                    </Col>
-                    <Col span="4">
-                        <label>类目</label>
-                    </Col>
-                    <Col span="20">
-                        <Input v-model="categoryAddData.category" placeholder="请输入类目" @on-enter="categoryAddOk"></Input>
-                    </Col>
-                </Row>
+                <Input v-model="categoryAddDataTwo.value" :placeholder="categoryAddDataTwo.placeholder" @on-enter="categoryAddDataOk"></Input>
             </div>
             <div slot="footer">
-                <Button type="primary" @click="categoryAddOk">保存</Button>
+                <Button type="primary" @click="categoryAddDataOk">保存</Button>
             </div>
         </Modal>
         <Modal
@@ -231,7 +256,7 @@
                 </Row>
                 <Row>
                     <Col span="24">
-                        <div class="importHelp">您可通过模板下载，根据模提示一次录入贵公司的支出信息；完成后导入上传您的文件，可实现新增支出的批量导入。</div>
+                        <div class="importHelp">您可通过模板下载，根据模板提示一次录入贵公司的支出信息；完成后导入上传您的文件，可实现新增支出的批量导入。</div>
                     </Col>
                 </Row>
                 <Row>
@@ -257,7 +282,7 @@
                 </Row>
                 <Row>
                     <Col span="24">
-                        <div class="importHelp">您可通过模板下载，根据模提示一次录入贵公司的人员；完成后导入上传您的文件，可实现新增支出的批量导入。</div>
+                        <div class="importHelp">您可通过模板下载，根据模板提示一次录入贵公司的人员；完成后导入上传您的文件，可实现新增支出的批量导入。</div>
                     </Col>
                 </Row>
                 <Row>
@@ -291,12 +316,12 @@
                     phone: '',
                     id: ''
                 },
-                categoryAddData: {
+                categoryAddData: false,
+                categoryAddDataTwo: {
                     modal: false,
-                    category: '',
-                    parentId: '',
-                    rankActive: '1',
-                    id: ''
+                    value: '',
+                    level: 0,
+                    placeholder: '请输入类目'
                 },
                 supplierAddData: {
                     modal: false,
@@ -315,7 +340,8 @@
                     infoRed: []
                 },
                 depts: [],
-                categoryData: []
+                categoryData: [],
+                categoryActive: {}
             }
         },
         mounted(){
@@ -425,12 +451,19 @@
                         this.expenditure.categorys = arr;
                     }
                 })
-                /**-
-                * 获取一级类目
-                * */
-                this.$ajax.get("/categorys").then((res) => {
-                    if( res.data.meta.code === 200 && typeof res.data.data != 'undefined'){
+
+                this.$ajax.get('/categorys').then((res) => {
+                    if(res.data.meta.code === 200){
                         this.categoryData = res.data.data;
+                        this.categoryActive = this.categoryData[0];
+                        for(let i=0; i<this.categoryData.length; i++){
+                            this.categoryData[i].show = false;
+                            this.categoryData[i].editValue = '';
+                            for(let j=0; j<this.categoryData[i].childrens.length; j++){
+                                this.categoryData[i].childrens[j].show = false;
+                                this.categoryData[i].childrens[j].editValue = '';
+                            }
+                        }
                     }
                 })
             },
@@ -708,43 +741,67 @@
                     }
                 })
             },
-            categoryAdd(){
-                this.categoryAddData.id = '';
-                this.categoryAddData.rankActive = '1';
-                this.categoryAddData.category = '';
-                this.categoryAddData.parentId = '';
-                this.categoryAddData.modal = true;
+            categoryEditTodo(item){
+                item.show = true;
+                item.editValue = item.name;
+                this.categoryData.push({});
+                this.categoryData.pop();
             },
-            categoryAddOk(){
-                /** 
-                 * 保存添加人员
+            categoryEditSaveTodo(item){
+                 /** 
+                 * 保存修改添加人员
                 */
-                let level = 1;
-                let parentId = 0;
-                if(this.categoryAddData.category === ''){
+                if(item.editValue === ''){
                     this.$Notice.warning({
                         title: '请输入类目名！'
                     });
                     return;
                 }
-                if(this.categoryAddData.rankActive === '2'){
-                    level = 2;
-                    if(this.categoryAddData.parentId === ''){
-                        this.$Notice.warning({
-                            title: '请选择父级类！'
-                        });
-                        return;
-                    }else{
-                        parentId = this.categoryAddData.parentId;
+                this.$ajax({
+                    url: "/categorys",
+                    method: 'PUT',
+                    params: {
+                        id: item.id,
+                        name: item.editValue,
+                        parentId: item.parentId,
+                        level: item.level
                     }
+                }).then((res) => {
+                    if(res.data.meta.code === 200){
+                        this.$Notice.success({
+                            title: '修改成功。'
+                        });
+                        this.getCategorys();
+                        item.show = false;
+                        item.editValue = '';
+                    }
+                })
+            },
+            categoryAddTwo(level,placeholder){
+                this.categoryAddDataTwo.level = level;
+                this.categoryAddDataTwo.modal = true;
+                this.categoryAddDataTwo.value = '';
+                this.categoryAddDataTwo.placeholder = placeholder;
+            },
+            categoryAddDataOk(){
+                let parentId = 0;
+                if(this.categoryAddDataTwo.level === 2){
+                    parentId = this.categoryActive.id;
                 }
+                if(this.categoryAddDataTwo.value === ''){
+                    this.$Notice.warning({
+                        title: '请输入类目名！'
+                    });
+                    return;
+                }
+                
                 this.$ajax({
                     url: "/categorys",
                     method: 'POST',
                     params: {
-                        name: this.categoryAddData.category,
+                        name: this.categoryAddDataTwo.value,
                         parentId: parentId,
-                        level: level
+                        level: this.categoryAddDataTwo.level
                     }
                 }).then((res) => {
                     if(res.data.meta.code === 200){
@@ -752,10 +809,39 @@
                             title: '添加成功。'
                         });
                         this.getCategorys();
-                        this.categoryAddData.modal = false;
+                        this.categoryAddDataTwo.modal = false;
                     }
                 })
-            
+            },
+            categoryDelTodo(item,index){
+                this.$Modal.confirm({
+                    content: '<h3>确认是否删除!</h3>',
+                    okText: '是',
+                    cancelText: '否',
+                    onOk: () => {
+                        this.$ajax({
+                            url: "/categorys/"+item.id,
+                            method: "DELETE"
+                        }).then((res) => {
+                            if(res.data.meta.code === 452){
+                                this.$Notice.error({
+                                    title: '该类目下存在子类目，不能删除!'
+                                });
+                            } else if(res.data.meta.code === 200){
+                                if(item.level === 1){
+                                    this.getCategorys();
+                                }else if(item.level === 2){
+                                    for(let i=0; i<this.categoryData.length; i++){
+                                        if(this.categoryData[i] === this.categoryActive){
+                                            this.categoryData[i].childrens.splice(index,1);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        })
+                    }
+                });
             },
             supplierAdd(){
                 /** 
@@ -951,6 +1037,7 @@
 </script>
 <style lang="less">
     .u-expenditure-add{
+        
         .center{
             text-align: center;
         }
@@ -1049,5 +1136,68 @@
         .importHelp{
             padding: 20px 80px 0;
         }   
+    }
+    .vertical-center-modal .u-category-content{
+        display: flex;
+        flex-direction: row;
+        border-radius: 5px;
+        margin: 10px 0;
+        border: 1px solid #e0e0e0;
+        height: 400px!important;
+        .u-category-one{
+            width: 40%;
+            background: #f1eff5;
+            .header{
+                border-right: 1px solid #fff;
+            }
+        }
+        .u-category-two{
+            width: 60%;
+            .header{
+                border-left: 1px solid #fff;
+            }
+        }
+        .header{
+            background: #e0e0e0;
+            .name{
+                font-size: 16px;
+                font-weight: bold;
+                text-align: center;
+                line-height: 50px;
+                position: relative;
+                .add{
+                    position: absolute;
+                    right: 10px;
+                    top: 0;
+                    cursor: pointer;
+                    .ivu-icon{
+                        line-height: 50px;
+                        font-size: 30px;
+                        color: #2c8df2;
+                    }
+                }
+            }
+        }
+        .u-category-con{
+            overflow: hidden;
+            overflow-y: auto;
+            height: 350px!important;
+            .content-item{
+                line-height: 50px;
+                position: relative;
+                padding: 0 100px 0 10px;
+                cursor: pointer;
+                .operation{
+                    position: absolute;
+                    right: 10px;
+                    line-height: 50px;
+                    top: 0;
+                }
+            }
+            .content-item.active{
+                background: #fff;
+            }
+        }
+        
     }
 </style>

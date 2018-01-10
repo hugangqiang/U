@@ -59,7 +59,7 @@
             
         },
         mounted(){
-
+            localStorage.removeItem('expenditure');
         },
         methods: {
             LoginSubmit(name) {

@@ -405,7 +405,8 @@
 				/** 
 				 * 退出登录
 				 **/
-        		this.$store.commit('SAVE_USER', {});
+                this.$store.commit('SAVE_USER', {});
+                localStorage.removeItem('expenditure');
                 this.$delCookie("token");
                 this.$router.push({path:'/'});
         	}

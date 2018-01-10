@@ -60,6 +60,7 @@ export default{
                     switch (error.response.status) {
                         case 401:
                             this.$store.commit('SAVE_USER', {});
+                            localStorage.removeItem('expenditure');
                             this.$delCookie("token")
                             if(url === '/materials/search'){
                                 this.$ajax({
