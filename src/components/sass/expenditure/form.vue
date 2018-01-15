@@ -87,7 +87,7 @@
                     startDateOpen: false,
                     endDate: [],
                     endDateOpen: false,
-                    cycle: 1,
+                    cycle: 2,
                     cycleData: [
                         {
                             key: 1,
@@ -306,7 +306,7 @@
             changeFind(){
                 this.getData({
                     type: this.finds.filter,
-                    dateType: this.findocumentds.cycle
+                    dateType: this.finds.cycle
                 })
             },
             changeFindCycle(){
