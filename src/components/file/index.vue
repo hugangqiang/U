@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="u-file-list-pages" v-show="fileList.total>15">
-                    <Page ref="pages" :total="fileList.total" :current="1" show-sizer  show-elevator placement="top" @on-change="changePage" @on-page-size-change="changeSizePage"></Page>
+                    <Page ref="pages" :total="fileList.total" :current="1" show-sizer :page-size="fileList.pageSize" :page-size-opts="[15, 30, 45, 60]"  show-elevator placement="top" @on-change="changePage" @on-page-size-change="changeSizePage"></Page>
                 </div>
             </div>
         </div>

@@ -16,9 +16,15 @@
                                 <Input type="text" v-model="item.editValue"></Input>
                             </div>
                             <div class="operation" v-show="item === categoryActive">
-                                <Button type="primary" size="small" v-if="!item.show" @click.native="categoryEditTodo(item)">修改</Button>
-                                <Button type="primary" size="small" v-else @click.native="categoryEditSaveTodo(item)">保存</Button>
-                                <Button type="error" size="small" @click.native="categoryDelTodo(item,index)">删除</Button>
+                                <div v-if="item.isDefault">
+                                    <Button v-if="item.status === 'Y'" type="success" size="small" @click.native="categoryShopTodo(item,0)">停用</Button>
+                                    <Button v-else type="warning" size="small" @click.native="categoryShopTodo(item,1)">禁用</Button>
+                                </div>
+                                <div v-else>
+                                    <Button type="primary" size="small" v-if="!item.show" @click.native="categoryEditTodo(item)">修改</Button>
+                                    <Button type="primary" size="small" v-else @click.native="categoryEditSaveTodo(item)">保存</Button>
+                                    <Button type="error" size="small" @click.native="categoryDelTodo(item,index)">删除</Button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -37,9 +43,15 @@
                                 <Input type="text" v-model="item.editValue"></Input>
                             </div>
                             <div class="operation" >
-                                <Button type="primary" size="small" v-if="!item.show" @click.native="categoryEditTodo(item)">修改</Button>
-                                <Button type="primary" size="small" v-else @click.native="categoryEditSaveTodo(item)">保存</Button>
-                                <Button type="error" size="small" @click.native="categoryDelTodo(item,index)">删除</Button>
+                                <div v-if="item.isDefault">
+                                    <Button v-if="item.status === 'Y'" type="success" size="small" @click.native="categoryShopTodo(item,0)">停用</Button>
+                                    <Button v-else type="warning" size="small" @click.native="categoryShopTodo(item,1)">禁用</Button>
+                                </div>
+                                <div v-else>
+                                    <Button type="primary" size="small" v-if="!item.show" @click.native="categoryEditTodo(item)">修改</Button>
+                                    <Button type="primary" size="small" v-else @click.native="categoryEditSaveTodo(item)">保存</Button>
+                                    <Button type="error" size="small" @click.native="categoryDelTodo(item,index)">删除</Button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -79,8 +91,8 @@
         mounted(){
             this.getData();
             document.querySelector('.u-category-content').style.height = document.documentElement.clientHeight - 200 + 'px';
-            document.querySelectorAll('.u-category-con')[0].style.height = document.documentElement.clientHeight - 240 - 50 + 'px';
-            document.querySelectorAll('.u-category-con')[1].style.height = document.documentElement.clientHeight - 240 - 50 + 'px';
+            document.querySelectorAll('.u-category-con')[0].style.height = document.documentElement.clientHeight - 200 - 50 + 'px';
+            document.querySelectorAll('.u-category-con')[1].style.height = document.documentElement.clientHeight - 200 - 50 + 'px';
         },
         methods: {
             getData(){
@@ -200,6 +212,33 @@
                         })
                     }
                 });
+            },
+            categoryShopTodo(item,type){
+                this.$ajax({
+                    url: "/categorys/"+item.id,
+                    method: "PATCH",
+                    params: {
+                        type: type
+                    }
+                }).then((res) => {
+                    if(res.data.meta.code === 200){
+                        if(type === 1){
+                            item.status = 'Y';
+                            this.$Notice.success({
+                                title: '启用成功。'
+                            });
+                            this.categoryData.push({});
+                            this.categoryData.pop();
+                        }else if(type === 0){
+                            item.status = 'N';
+                            this.$Notice.success({
+                                title: '禁用成功。'
+                            });
+                            this.categoryData.push({});
+                            this.categoryData.pop();
+                        }
+                    }
+                })
             }
         }
     }
@@ -223,6 +262,15 @@
                 width: 75%;
                 .header{
                     border-left: 1px solid #fff;
+                }
+                .u-category-con{
+                    padding: 0 30px;
+                }
+                .content-item{
+                    border-bottom: 1px solid #e3e3e3;
+                }
+                .content-item:last-child{
+                    border-bottom: none;
                 }
             }
             .header{
@@ -253,6 +301,7 @@
                     line-height: 50px;
                     position: relative;
                     padding: 0 100px 0 10px;
+                   
                     cursor: pointer;
                     .operation{
                         position: absolute;

@@ -6,7 +6,16 @@
                 <Button type="success" @click.native="exportExcel">导出Excel</Button>
             </div>
             <div class="u-table-filter">
-                <DatePicker v-model="finds.date" type="daterange" placement="bottom-start" placeholder="请选择起止日期" @on-change="changeFindDate" style="width: 200px;"></DatePicker>
+                <DatePicker 
+                    v-model="finds.date"
+                    ref="findDate"
+                    format="yyyy-MM-dd"  
+                    type="daterange" 
+                    placement="bottom-start" 
+                    placeholder="请选择起止日期"
+                    @on-change="changeFindDate"
+                    style="width: 200px;">
+                </DatePicker>
                 <Select filterable v-model="finds.cycle" style="width:200px;" placeholder="请选择周期" @on-change="changeFindCycle">
                     <Option v-for="item in finds.cycleData" :value="item.key" :key="item.key">{{ item.value }}</Option>
                 </Select>
@@ -47,9 +56,37 @@
 <script>
     export default {
         data () {
+            let getDate = () => {
+                let now = new Date(); //当前日期 
+                let nowDayOfWeek = now.getDay(); //今天本周的第几天 
+                let nowDay = now.getDate(); //当前日 
+                let nowMonth = now.getMonth(); //当前月 
+                let nowYear = now.getFullYear(); //当前年 
+                let arr = [];
+                function formatDate(date) { 
+                    let myyear = date.getFullYear(); 
+                    let mymonth = date.getMonth()+1; 
+                    let myweekday = date.getDate(); 
+
+                    if(mymonth < 10){ 
+                        mymonth = "0" + mymonth; 
+                    } 
+                    if(myweekday < 10){ 
+                        myweekday = "0" + myweekday; 
+                    } 
+                    return (myyear+"-"+mymonth + "-" + myweekday); 
+                }
+                arr[0] = formatDate( new Date(nowYear, nowMonth, nowDay - nowDayOfWeek) );
+                arr[1] = formatDate( new Date(nowYear, nowMonth, nowDay) );
+                return arr;
+            }
             return {
                 finds: {
-                    date: [],
+                    date: getDate(),
+                    startDate: [],
+                    startDateOpen: false,
+                    endDate: [],
+                    endDateOpen: false,
                     cycle: 1,
                     cycleData: [
                         {
@@ -190,7 +227,7 @@
             }
         },
         created(){
-           
+            
         },
         mounted(){
             this.getData({
@@ -269,29 +306,93 @@
             changeFind(){
                 this.getData({
                     type: this.finds.filter,
-                    dateType: this.finds.cycle
+                    dateType: this.findocumentds.cycle
                 })
             },
             changeFindCycle(){
-                this.finds.date = [];
+                if(this.finds.cycle === ''){return;}
+                
+
+                let now = new Date(); //当前日期 
+                let nowDayOfWeek = now.getDay(); //今天本周的第几天 
+                let nowDay = now.getDate(); //当前日 
+                let nowMonth = now.getMonth(); //当前月 
+                let nowYear = now.getFullYear(); //当前年 
+                function formatDate(date) { 
+                    let myyear = date.getFullYear(); 
+                    let mymonth = date.getMonth()+1; 
+                    let myweekday = date.getDate(); 
+
+                    if(mymonth < 10){ 
+                        mymonth = "0" + mymonth; 
+                    } 
+                    if(myweekday < 10){ 
+                        myweekday = "0" + myweekday; 
+                    } 
+                    return (myyear+"-"+mymonth + "-" + myweekday); 
+                }
+                function getBeforeDate(n){  
+                    let d = new Date();  
+                    let year = d.getFullYear();  
+                    let mon=d.getMonth()+1;  
+                    let day=d.getDate();  
+                    if(day <= n){  
+                            if(mon>1) {  
+                            mon=mon-1;  
+                            }  
+                        else {  
+                            year = year-1;  
+                            mon = 12;  
+                            }  
+                        }  
+                        d.setDate(d.getDate()-n);  
+                        year = d.getFullYear();  
+                        mon=d.getMonth()+1;  
+                        day=d.getDate(); 
+                    return year+"-"+(mon<10?('0'+mon):mon)+"-"+(day<10?('0'+day):day);  
+                }
+                switch(this.finds.cycle){
+                    case 1:
+                        this.finds.date[0] = formatDate( new Date(nowYear, nowMonth, nowDay - nowDayOfWeek) );
+                        this.finds.date[1] = formatDate( new Date(nowYear, nowMonth, nowDay) );
+                        break;
+                    case 2:
+                        this.finds.date[0] = getBeforeDate(15);
+                        this.finds.date[1] = formatDate( new Date(nowYear, nowMonth, nowDay) );
+                        break;
+                    case 3:
+                        this.finds.date[0] = getBeforeDate(30);
+                        this.finds.date[1] = formatDate( new Date(nowYear, nowMonth, nowDay) );
+                        break;
+                    case 4:
+                        this.finds.date[0] = getBeforeDate(91);
+                        this.finds.date[1] = formatDate( new Date(nowYear, nowMonth, nowDay) );
+                        break;
+                    case 5:
+                        this.finds.date[0] = getBeforeDate(182);
+                        this.finds.date[1] = formatDate( new Date(nowYear, nowMonth, nowDay) );
+                        break;
+                    case 6:
+                        this.finds.date[0] = getBeforeDate(365);;
+                        this.finds.date[1] = formatDate( new Date(nowYear, nowMonth, nowDay) );
+                        break;
+                    default: ;
+                }
+                this.finds.date.push({});
+                this.finds.date.pop();
+                
+
                 this.getData({
                     type: this.finds.filter,
                     dateType: this.finds.cycle
                 })
             },
-            changeFindDate(){
+            changeFindDate(date){
                 this.finds.cycle = '';
-                function getDate(str){
-                    let date = new Date(str);
-                    function p(s) {
-                        return s < 10 ? '0' + s: s;
-                    }
-                    return date.getFullYear() + '-' + p((date.getMonth() + 1)) + '-' + p(date.getDate()); 
-                }
                 this.getData({
                     type: this.finds.filter,
-                    startDate: getDate(this.finds.date[0]),
-                    endDate: getDate(this.finds.date[0])
+                    startDate: date[0],
+                    endDate: date[1]
                 })
             },
             exportExcel(){
