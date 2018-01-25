@@ -304,10 +304,18 @@
                 })
             },
             changeFind(){
+                function getDate(str){
+                    let date = new Date(str);
+                    function p(s) {
+                        return s < 10 ? '0' + s: s;
+                    }
+                    return date.getFullYear() + '-' + p((date.getMonth() + 1)) + '-' + p(date.getDate()); 
+                }
                 this.getData({
                     type: this.finds.filter,
-                    dateType: this.finds.cycle
-                })
+                    startDate: getDate(this.finds.date[0]),
+                    endDate: getDate(this.finds.date[1])
+                }) 
             },
             changeFindCycle(){
                 if(this.finds.cycle === ''){return;}
