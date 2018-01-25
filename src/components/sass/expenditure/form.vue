@@ -396,6 +396,7 @@
                 })
             },
             changeFindDate(date){
+                
                 this.finds.cycle = '';
                 this.getData({
                     type: this.finds.filter,
